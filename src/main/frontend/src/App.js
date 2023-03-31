@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import icon from './mountainviewlogo.PNG'
+
 
 function Home() {
   return (
-    <div>
+    <div className="home-page"> {/* Add class name here */}
       <div className="logo">
-        <img id="mountainimg" src="mountainviewlogo.PNG" alt="로고 이미지" />
+        <img id="mountainimg" src={icon} alt="로고 이미지" />
       </div>
       <div className="main-text">
         <h1>Let's Go</h1>
