@@ -1,20 +1,17 @@
 .App {
   text-align: center;
 }
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
-
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
 .App-header {
-  background-color: #282c34;
+  background-color: #282C34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -23,11 +20,9 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
 .App-link {
-  color: #61dafb;
+  color: #61DAFB;
 }
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,4 +30,57 @@
   to {
     transform: rotate(360deg);
   }
+}
+.logo {
+  position: absolute;
+  top: 65px;
+  left: 40px;
+  z-index: 1;
+}
+.logo img {
+  width: 150px;
+  height: 30px;
+}
+/* 새로운 클래스 생성 */
+.main-text {
+  position: absolute;
+  top: 150px;
+  left: 40px;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: 4em;
+  font-weight: bold;
+  color: black;
+  text-shadow: none;
+  display: flex;
+  flex-direction: column;
+  /* 추가 */
+}
+.main-text h1 {
+  margin: 0;
+  flex-grow: 1;
+}
+/* 네비게이션 메뉴 스타일 */
+.menu {
+  position: absolute;
+  top: 65px;
+  right: 20px;
+  z-index: 1;
+  display: flex;
+}
+.menu ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.menu li {
+  margin-left: 20px;
+}
+.menu a {
+  color: #000;
+  text-decoration: none;
+}
+/* mountain 텍스트만 진하게 표시 */
+.main-text span {
+  font-weight: bold;
 }
