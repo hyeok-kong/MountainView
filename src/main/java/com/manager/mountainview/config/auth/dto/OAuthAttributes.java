@@ -5,6 +5,7 @@ import com.manager.mountainview.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -23,12 +24,17 @@ public class OAuthAttributes {
     }
 
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
-        if("naver".equals(registrationId)) {
 
-        } else if("kakao".equals(registrationId)) {
-
+        switch (registrationId) {
+            case "google":
+                return ofGoogle(userNameAttributeName, attributes);
+//            case "kakao":
+//                return ofKakao("email", attributes);
+//            case "naver":
+//                return ofNaver("id", attributes);
+            default:
+                throw new RuntimeException();
         }
-        return ofGoogle(userNameAttributeName, attributes);
     }
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
@@ -40,11 +46,13 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public User toEntity() {
-        return User.builder()
-                .name(name)
-                .email(email)
-                .role(Role.USER)
-                .build();
+    public Map<String, Object> convertToMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", nameAttributeKey);
+        map.put("key", nameAttributeKey);
+        map.put("name", name);
+        map.put("email", email);
+
+        return map;
     }
 }
