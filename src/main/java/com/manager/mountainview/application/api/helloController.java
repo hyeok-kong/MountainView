@@ -1,4 +1,4 @@
-package com.manager.mountainview.hello;
+package com.manager.mountainview.application.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
