@@ -28,10 +28,10 @@ public class OAuthAttributes {
         switch (registrationId) {
             case "google":
                 return ofGoogle(userNameAttributeName, attributes);
-//            case "kakao":
-//                return ofKakao("email", attributes);
-//            case "naver":
-//                return ofNaver("id", attributes);
+            case "kakao":
+                return ofKakao("email", attributes);
+            case "naver":
+                return ofNaver("id", attributes);
             default:
                 throw new RuntimeException();
         }
@@ -43,6 +43,29 @@ public class OAuthAttributes {
                 .email((String) attributes.get("email"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
+
+    private static OAuthAttributes ofKakao(String nameAttributeKey, Map<String, Object> attributes) {
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
+
+        return OAuthAttributes.builder()
+                .name((String) kakaoProfile.get("nickname"))
+                .email((String) kakaoAccount.get("email"))
+                .attributes(kakaoAccount)
+                .nameAttributeKey(nameAttributeKey)
+                .build();
+    }
+
+    private static OAuthAttributes ofNaver(String nameAttributeKey, Map<String, Object> attributes) {
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+
+        return OAuthAttributes.builder()
+                .name((String) response.get("name"))
+                .email((String) response.get("email"))
+                .attributes(attributes)
+                .nameAttributeKey(nameAttributeKey)
                 .build();
     }
 
