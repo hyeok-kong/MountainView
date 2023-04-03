@@ -5,7 +5,8 @@
   left: 40px;
   z-index: 1;
 }
-.home-page .logo img{
+
+.home-page .logo img {
   width: 150px;
   height: 30px;
 }
@@ -23,10 +24,12 @@
   display: flex;
   flex-direction: column;
 }
+
 .home-page .main-text h1 {
   margin: 0;
   flex-grow: 1;
 }
+
 .home-page .main-text span {
   font-weight: bold;
 }
@@ -39,15 +42,18 @@
   z-index: 1;
   display: flex;
 }
+
 .home-page .menu ul {
   list-style: none;
   display: flex;
   margin: 0;
   padding: 0;
 }
+
 .home-page .menu li {
   margin-left: 20px;
 }
+
 .home-page .menu a {
   color: #000;
   text-decoration: none;
