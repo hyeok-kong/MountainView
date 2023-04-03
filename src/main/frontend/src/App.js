@@ -30,7 +30,7 @@ function Main() {
           <li><a href="#">Contact</a></li>
         </ul>
       </div>
-      <Map center={{ lat: 37.5665, lng: 126.9780 }} style={{ height: '500px' }}>
+      <Map center={{ lat: 37.5665, lng: 126.9780 }} style={{marginTop:'150px', height: '500px' }}>
         <MapMarker position={markerPosition} onClick={handleMarkerClick} />
         <CustomOverlayMap
           position={overlayPosition}
