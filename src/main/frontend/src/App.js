@@ -1,30 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-import icon from './mountainviewlogo.PNG'
+import "./App.css";
+import Header from "../src/components/Header/Header";
+import Footer from "../src/components/Footer/Footer";
+import Container from "./components/Container/Container";
 
-
-function Home() {
+const Home = (props) => {
   return (
-    <div className="home-page"> {/* Add class name here */}
-      <div className="logo">
-        <img id="mountainimg" src={icon} alt="로고 이미지" />
-      </div>
-      <div className="main-text">
-        <h1>Let's Go</h1>
-        <h1><span>Mountain</span></h1>
-      </div>
-      <div className="menu">
-        <ul>
-          <li><a href="/Home">Home</a></li>
-          <li><a href="/login">Login</a></li>
-          <li><a href="#">Services</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </div>
+    <div id="wrap">
+      <Header/>
+        {props.children}
+      <section>
+        <Container/>
+      </section>
+      <Footer/>
     </div>
   );
-}
+};
 
 function Login() {
   const [message, setMessage] = useState("");
