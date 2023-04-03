@@ -18,26 +18,26 @@ function Main() {
   };
 
   return (
-    <div className="home-page">
-      <div className="logo">
-        <img className="logo-img" src={icon} alt="Logo Image" />
+    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+      <div className="logo" style={{ textAlign: 'center' }}>
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: '150px' }} />
       </div>
-      <div className="menu">
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/login">Login</a></li>
-          <li><a href="/main">Services</a></li>
-          <li><a href="#">Contact</a></li>
+      <div className="menu" style={{ textAlign: 'center', marginTop: '50px' }}>
+        <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+          <li style={{ display: 'inline-block' }}><a href="#" style={{ textDecoration: 'none', color: 'black' }}>Contact</a></li>
         </ul>
       </div>
-      <Map center={{ lat: 37.5665, lng: 126.9780 }} style={{marginTop:'150px', height: '500px' }}>
+      <Map center={{ lat: 37.5665, lng: 126.9780 }} style={{ marginTop:'150px', height: '500px', flex: 1  }}>
         <MapMarker position={markerPosition} onClick={handleMarkerClick} />
         <CustomOverlayMap
           position={overlayPosition}
           visible={overlayVisibility}
           onClick={handleOverlayCloseClick}
         >
-          <div>
+          <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid black' }}>
             <p>Hiking Trail Information</p>
             <p>Difficulty: Medium</p>
             <p>Length: 5km</p>
@@ -47,7 +47,6 @@ function Main() {
     </div>
   );
 }
-
 function Home() {
   return (
     <div className="home-page">
