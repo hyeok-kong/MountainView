@@ -7,7 +7,7 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* background-color: beige; */
+    background-color: rgb(218, 218, 24);
     padding: 20px;
     font-weight: bold;
     width: auto;
@@ -15,20 +15,19 @@ a {
 }
 
 .navbar .navbar__logo {
-    position: absolute;
-    left: 40px;
-    z-index: 1;
+    width: 70%;
+    /* z-index: 1; */
 }
 
 .navbar .navbar__logo img{
-    width: 500px;
-    height: 100px;
+    max-width: 100%;
+    /* height: 100px; */
 }
 
 .navbar .navbar__menu {
     display: flex;
     list-style: none;
-    padding-left: 33em; 
+    /* padding-left: 33em;  */
 }
 
 .navbar__menu li {
