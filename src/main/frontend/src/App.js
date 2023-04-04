@@ -29,7 +29,7 @@ function Login() {
   }, []);
   return (
     <div>
-      <h2>Login Page1</h2>
+      <h2>Login Page</h2>
       <p>{message}</p>
     </div>
   );
