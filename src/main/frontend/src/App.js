@@ -18,24 +18,6 @@ const Home = (props) => {
   );
 };
 
-function s(){
-  const [message, setMessage] = useState("");
-  useEffect(() => {
-    fetch('/api/hello')
-      .then(response => response.text())
-      .then(message => {
-        setMessage(message);
-      });
-  }, []);
-  return (
-    <div>
-      <h2>Login Page</h2>
-      <p>{message}</p>
-    </div>
-  );
-  
-}
-
 function Login() {
   const [message, setMessage] = useState("");
   useEffect(() => {
