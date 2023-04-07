@@ -10,24 +10,15 @@ import mountainImage from './mountain.jpg'; // 산 이미지를 import 합니다
 
 
 function Main() {
-  const [markerPosition, setMarkerPosition] = useState({ lat: 37.5665, lng: 126.9780 });
-  const [overlayPosition, setOverlayPosition] = useState({ lat: 37.5665, lng: 126.9780 });
-  const [overlayVisibility, setOverlayVisibility] = useState(false);
-
-  const handleMarkerClick = () => {
-    setOverlayVisibility(true);
-  };
-
-  const handleOverlayCloseClick = () => {
-    setOverlayVisibility(false);
-  };
-
+  const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
+  const markers = [    {title: '한라산', position: {lat: 33.36137552429086,lng: 126.52942544970011} },    {title: '성산일출봉', position: {lat: 33.45880720408999,lng: 126.56213211127411}}  ];
+  
   return (
     <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
       <div className="logo" style={{ textAlign: 'center' }}>
         <img className="logo-img" src={icon} alt="Logo Image" style={{ width: '150px' }} />
       </div>
-      <div className="menu" style={{ textAlign: 'center', marginTop: '50px' }}>
+      <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
         <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
@@ -35,23 +26,70 @@ function Main() {
           <li style={{ display: 'inline-block' }}><a href="/mountain_info" style={{ textDecoration: 'none', color: 'black' }}>Contact</a></li>
         </ul>
       </div>
-      <Map center={{ lat: 37.5665, lng: 126.9780 }} style={{ marginTop: '150px', height: '500px', flex: 1 }}>
-        <MapMarker position={markerPosition} onClick={handleMarkerClick} />
-        <CustomOverlayMap
-          position={overlayPosition}
-          visible={overlayVisibility}
-          onClick={handleOverlayCloseClick}
-        >
-          <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid black' }}>
-            <p>Hiking Trail Information</p>
-            <p>Difficulty: Medium</p>
-            <p>Length: 5km</p>
-          </div>
-        </CustomOverlayMap>
+      <Map
+        center={{
+          lat: 33.36137552429086,
+          lng: 126.52942544970011,
+        }}
+        style={{
+          marginTop: '150px',
+          width: '100%',
+          height: '45em',
+        }}
+        level={3}
+      >
+        {markers.map((marker, index) => ( /*여러 개의 마커 사용*/ 
+          <MapMarker
+            key={index}
+            position={marker.position}
+            clickable={true}
+            onClick={() => setMarkerIndex(index)}
+            title={marker.title}
+          >
+            {markerIndex === index && (
+              <div style={{ minWidth: "150px" }}>
+                <img
+                  alt="close"
+                  width="14"
+                  height="13"
+                  src="https://t1.daumcdn.net/localimg/localimages/07/mapjsapi/2x/bt_close.gif"
+                  style={{
+                    position: "absolute",
+                    right: "5px",
+                    top: "5px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setMarkerIndex(-1)}
+                />
+                {/* 인포윈도우 리스트 */}
+                <div style={{ padding: "5px", color: "#000" }}>
+                  {marker.title} <br />
+                  <a
+                    href="/Mountain_info"
+                    style={{ color: "blue" }}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    산 정보
+                  </a>{" "}
+                  <a
+                    href="게시판 링크 구현"
+                    style={{ color: "blue" }}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    게시판
+                  </a>
+                </div>
+              </div>
+            )}
+          </MapMarker>
+        ))}
       </Map>
     </div>
   );
 }
+
 function Home() {
   return (
     <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
@@ -247,7 +285,5 @@ function App() {
     </Router>
   );
 }
-
-
 
 export default App;
