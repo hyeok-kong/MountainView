@@ -6,6 +6,7 @@ import icon from './mountainviewlogo.PNG'
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import axios from 'axios';
 import mountainImage from './mountain.jpg'; // 산 이미지를 import 합니다.
+import { Card, Button, Modal, Form, Container } from "react-bootstrap";
 
 
 
@@ -24,7 +25,7 @@ function Main() {
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-          <li style={{ display: 'inline-block' }}><a href="/mountain_info" style={{ textDecoration: 'none', color: 'black' }}>Contact</a></li>
+          <li style={{ display: 'inline-block' }}><a href="/boardList" style={{ textDecoration: 'none', color: 'black' }}>board</a></li>
         </ul>
       </div>
       <Map
@@ -102,7 +103,7 @@ function Home() {
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-          <li style={{ display: 'inline-block' }}><a href="/mountain_info" style={{ textDecoration: 'none', color: 'black' }}>Contact</a></li>
+          <li style={{ display: 'inline-block' }}><a href="/boardList" style={{ textDecoration: 'none', color: 'black' }}>board</a></li>
         </ul>
       </div>
       <div className="main-text" style={{ display: 'flex', flexDirection: 'column' }}>
@@ -145,7 +146,7 @@ const Login = ({ isLoginSuccess, setIsLoginSuccess }) => {
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-          <li style={{ display: 'inline-block' }}><a href="/mountain_info" style={{ textDecoration: 'none', color: 'black' }}>Contact</a></li>
+          <li style={{ display: 'inline-block' }}><a href="/boardList" style={{ textDecoration: 'none', color: 'black' }}>board</a></li>
         </ul>
       </div>
       <div>
@@ -272,7 +273,125 @@ function Mountain_info() {
   );
 }
 
+function BoardList() {
+  const [board, setBoard] = useState([
+    { title: "Friedrich Wilhelm Nietzsche", content: "Weder Manu, noch Plato, noch Confucius, noch die jüdischen und christlichen Lehrer haben je an ihrem Recht zur Lüge gezweifelt", expanded: false },
+    { title: "道", content: "道可道 非常道 名可名 非常名  無名天 地之始 有名萬 物之母", expanded: false },
+    { title: "the road not taken", content: "I wandered lonely as a cloudThat floats on high o'er vales and hills,When all at once I saw a crowd,A host, of golden daffodilsBeside the lake, beneath the trees,Fluttering and dancing in the breeze.", expanded: false }
+  ]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
+  const fetchBoardData = async () => {
+    try {
+      const response = await axios.get("/api/board");
+      setBoard(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBoardData();
+  }, []);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post("/api/board", { title, content });
+      setBoard([...board, response.data]); // response.data에 새로 생성된 게시글이 담겨 있음
+      setTitle("");
+      setContent("");
+      setShowModal(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleButtonClick = () => {
+    setShowModal(true);
+  };
+
+  const handleExpandContent = (index) => {
+    const newBoard = [...board];
+    newBoard[index].expanded = true;
+    setBoard(newBoard);
+  };
+
+  return (
+    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+      <div className="navbar" style={{ backgroundColor: '#ffffff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px' }}>
+        <div className="logo" style={{ textAlign: 'center' }}>
+          <img className="logo-img" src={icon} alt="Logo Image" style={{ width: '150px' }} />
+        </div>
+        <div className="menu" style={{ textAlign: 'center', marginTop: '50px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/boardList" style={{ textDecoration: 'none', color: 'black' }}>board</a></li>
+          </ul>
+        </div>
+      </div>
+      <Container>
+        <div className="board-container" style={{ marginTop: '100px', padding: '20px' }}>
+          {board.map((post, index) => (
+            <Card key={index} className="mb-3" style={{ backgroundColor: '#ffffff' }}>
+              <Card.Body>
+                <Card.Title>{post.title}</Card.Title>
+                {post.content.length > 50 && !post.expanded ? (
+                  <div>
+                    <Card.Text>{post.content.substring(0, 50)}...</Card.Text>
+                    <Button onClick={() => handleExpandContent(index)}>Read more</Button>
+                  </div>
+                ) : (
+                  <div>
+                    <Card.Text>{post.content}</Card.Text>
+                  </div>
+                )}
+              </Card.Body>
+            </Card>
+          ))}
+          <div className="d-flex justify-content-end mb-3" style={{ marginLeft: 'auto' }}>
+            <Button onClick={handleButtonClick} style={{ backgroundColor: '#008000', border: 'none', borderRadius: '10px', fontSize: '16px' }}>New Post</Button>
+          </div>
+          <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>New Post</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter title"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                  />
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Content</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={content}
+                    onChange={(event) => setContent(event.target.value)}
+                  />
+                </Form.Group>
+                <Button type="submit" style={{ backgroundColor: '#008000', border: 'none', borderRadius: '10px', fontSize: '16px' }}>
+                  Submit
+                </Button>
+              </Form>
+            </Modal.Body>
+          </Modal>
+        </div>
+      </Container>
+    </div>
+  );
+}
 
 function App() {
   return (
@@ -282,6 +401,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/main" element={<Main />} />
         <Route path="/mountain_info" element={<Mountain_info />} />
+        <Route path="/boardList" element={<BoardList />} />
       </Routes>
     </Router>
   );
