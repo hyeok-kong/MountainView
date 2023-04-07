@@ -1,4 +1,4 @@
-package com.manager.mountainview.application.dto.user;
+package com.manager.mountainview.application.dto.request;
 
 import com.manager.mountainview.domain.user.Role;
 import com.manager.mountainview.domain.user.User;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UserDto {
+public class UserRequestDto {
     private String email;
     private String name;
     private String nickname;
@@ -18,7 +18,7 @@ public class UserDto {
     private boolean isSubmitted;
 
     @Builder
-    public UserDto(User user) {
+    public UserRequestDto(User user) {
         this.email = user.getEmail();
         this.name = user.getName();
         this.nickname = user.getNickname();
