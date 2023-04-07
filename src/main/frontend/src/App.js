@@ -14,6 +14,7 @@ function Main() {
   const markers = [    {title: '한라산', position: {lat: 33.36137552429086,lng: 126.52942544970011} },    {title: '성산일출봉', position: {lat: 33.45880720408999,lng: 126.56213211127411}}  ];
   
   return (
+    /*헤더 구성*/ 
     <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
       <div className="logo" style={{ textAlign: 'center' }}>
         <img className="logo-img" src={icon} alt="Logo Image" style={{ width: '150px' }} />
