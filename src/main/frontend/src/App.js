@@ -9,7 +9,6 @@ import mountainImage from './mountain.jpg'; // 산 이미지를 import 합니다
 import { Card, Button, Modal, Form, Container } from "react-bootstrap";
 
 
-
 function Main() {
   const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
   const markers = [    {title: '한라산', position: {lat: 33.36137552429086,lng: 126.52942544970011} },    {title: '성산일출봉', position: {lat: 33.45880720408999,lng: 126.56213211127411}}  ];
@@ -75,7 +74,7 @@ function Main() {
                     산 정보
                   </a>{" "}
                   <a
-                    href="게시판 링크 구현"
+                    href="/BoardList"
                     style={{ color: "blue" }}
                     target="_blank"
                     rel="noreferrer"
