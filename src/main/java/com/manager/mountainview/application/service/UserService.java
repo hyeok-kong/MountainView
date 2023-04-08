@@ -1,6 +1,7 @@
 package com.manager.mountainview.application.service;
 
-import com.manager.mountainview.application.dto.user.UserDto;
+import com.manager.mountainview.application.dto.request.UserRequestDto;
+import com.manager.mountainview.application.dto.response.UserResponseDto;
 import com.manager.mountainview.domain.user.User;
 import com.manager.mountainview.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +14,23 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long save(UserDto userDto) {
-        return userRepository.save(userDto.toEntity()).getId();
+    public Long save(UserRequestDto userRequestDto) {
+        return userRepository.save(userRequestDto.toEntity()).getId();
     }
-    public UserDto findByEmail(String email) {
+
+    @Transactional
+    public UserRequestDto findByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new IllegalArgumentException("해당 유저가 없습니다. email : " + email));
 
-        return new UserDto(user);
+        return new UserRequestDto(user);
     }
 
+    @Transactional
+    public User findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 유저가 없습니다. id : " + id));
 
+        return user;
+    }
 }

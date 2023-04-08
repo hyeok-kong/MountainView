@@ -1,7 +1,7 @@
 package com.manager.mountainview.config.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.manager.mountainview.application.dto.user.UserDto;
+import com.manager.mountainview.application.dto.request.UserRequestDto;
 import com.manager.mountainview.application.service.UserService;
 import com.manager.mountainview.config.auth.dto.TokenUserDto;
 import com.manager.mountainview.config.auth.token.Token;
@@ -43,7 +43,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                     .role(Role.USER)
                     .build();
 
-            userService.save(new UserDto(user));
+            userService.save(new UserRequestDto(user));
         } catch (Exception e) {
             System.out.println("예상하지 못한 예외 발생");
         }

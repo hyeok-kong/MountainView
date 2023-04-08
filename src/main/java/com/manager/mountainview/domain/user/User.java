@@ -2,12 +2,15 @@ package com.manager.mountainview.domain.user;
 
 
 import com.manager.mountainview.domain.BaseTimeEntity;
+import com.manager.mountainview.domain.posts.Posts;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -24,6 +27,7 @@ public class User extends BaseTimeEntity {
     @Column(length = 200, nullable = false)
     private String email;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
@@ -40,6 +44,10 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isSubmitted;
 
+    @OneToMany(mappedBy = "user")
+    private List<Posts> postsList = new ArrayList<>();
+
+
     @Builder
     public User(String name, String email, Role role, String nickname, char gender, int age, boolean isSubmitted) {
         this.name = name;
@@ -55,5 +63,9 @@ public class User extends BaseTimeEntity {
         this.name = name;
 
         return this;
+    }
+
+    public void addPosts(Posts posts) {
+        postsList.add(posts);
     }
 }

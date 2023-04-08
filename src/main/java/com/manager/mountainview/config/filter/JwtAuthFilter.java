@@ -1,6 +1,6 @@
 package com.manager.mountainview.config.filter;
 
-import com.manager.mountainview.application.dto.user.UserDto;
+import com.manager.mountainview.application.dto.request.UserRequestDto;
 import com.manager.mountainview.application.service.UserService;
 import com.manager.mountainview.config.auth.token.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -30,16 +30,16 @@ public class JwtAuthFilter extends GenericFilterBean {
         if(token != null && tokenService.verifyToken(token)) {
             String email = tokenService.getUid(token);
 
-            UserDto userDto = userService.findByEmail(email);
+            UserRequestDto userRequestDto = userService.findByEmail(email);
 
-            Authentication auth = getAuthentication(userDto);
+            Authentication auth = getAuthentication(userRequestDto);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
         chain.doFilter(request, response);
     }
 
-    public Authentication getAuthentication(UserDto user) {
+    public Authentication getAuthentication(UserRequestDto user) {
         return new UsernamePasswordAuthenticationToken(user, "", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 }
