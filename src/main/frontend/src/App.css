@@ -1,5 +1,81 @@
+/*mMyMountain css */
+.container1 {
+  position: relative;
+  width: 100%;
+  padding: 20px 20px;
+  height: 70vh;
+  margin-top: 5em;
+  border: 2px solid black;
+}
+
+.Left {
+  float: left;
+  width: 45%;
+  height: 34em;
+}
+
+.nickname {
+  position: relative;
+  width: 200px;
+  border: 2px solid black;
+  margin: 5px;
+}
+
+.mountainlist {
+  width: 95%;
+  max-width: 550px;
+  margin-top: 14px;
+  border: 2px solid black;
+  height: 31em;
+  margin: 5px;
+}
+
+.Right {
+  float: right;
+  width: 45%;
+  height: 34em;
+}
+
+.grade {
+  position: relative;
+  width: 200px;
+  border: 2px solid black;
+  margin: 5px;
+}
+
+.reviewlist {
+  width: 95%;
+  max-width: 550px;
+  margin-top: 14px;
+  border: 2px solid black;
+  height: 35em;
+  margin: 5px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .Left,
+  .Right {
+    float: none;
+    width: 100%;
+    height: auto;
+  }
+  
+  .mountainlist,
+  .reviewlist {
+    width: 100%;
+    max-width: none;
+    height: auto;
+  }
+}
+
+
+/* Logo */
 .logo {
-  /* Logo */
   position: absolute;
   top: 65px;
   left: 40px;
@@ -11,10 +87,11 @@
   height: 30px;
 }
 
+
 /* Main Text */
 .home-page .main-text {
   position: absolute;
-  top: 150px;
+  top: 300px;
   left: 40px;
   font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
   font-size: 4em;
@@ -34,6 +111,7 @@
   font-weight: bold;
 }
 
+
 /* Navigation Menu */
 .home-page .menu {
   position: absolute;
@@ -51,7 +129,7 @@
 }
 
 .home-page .menu li {
-  margin-left: 20px;
+  margin: 0;
 }
 
 .home-page .menu a {
@@ -68,10 +146,11 @@
 .home-page .container {
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  height: 30em;
+  border:2px solid black; 
+  margin-top: 20em;
+  width: 100%;
 }
-
-
 
 
 /* Map Container */
