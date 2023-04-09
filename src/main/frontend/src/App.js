@@ -501,7 +501,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/main" element={<Kakao />} />
-        <Route path="/mountain_info" element={<Mountain_info />} />  {/*산 정보*/}
+        <Route path="/mountain_info" element={<Mountain_info />} />  
         <Route path="/boardList" element={<BoardList />} />  {/*게시판*/}
         <Route path="/MyMountain" element={<MyMountain />} />  {/*내 등산기록 페이지*/}
       </Routes>
