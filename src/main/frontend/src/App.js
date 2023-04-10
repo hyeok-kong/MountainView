@@ -7,35 +7,69 @@ import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import axios from 'axios';
 import mountainImage from './mountain.jpg'; // 산 이미지를 import 합니다.
 import { Card, Button, Modal, Form, Container } from "react-bootstrap";
+import '@fortawesome/fontawesome-free/css/all.css';
 
 
-function Main() {
+function Kakao() {
   const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
   const markers = [    {title: '한라산', position: {lat: 33.36137552429086,lng: 126.52942544970011} },    {title: '성산일출봉', position: {lat: 33.45880720408999,lng: 126.56213211127411}}  ];
-  
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     /*헤더 구성*/ 
     <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
       <div className="logo" style={{ textAlign: 'center' }}>
-        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: '150px' }} />
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
       </div>
-      <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-        <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-          <li style={{ display: 'inline-block' }}><a href="/boardList" style={{ textDecoration: 'none', color: 'black' }}>board</a></li>
-        </ul>
-      </div>
+      {isMobile ? (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+          {isMenuOpen && (
+            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+          </ul>
+        </div>
+      )}
       <Map
         center={{
           lat: 33.36137552429086,
           lng: 126.52942544970011,
         }}
         style={{
-          marginTop: '150px',
+          marginTop: '280px',
           width: '100%',
-          height: '45em',
+          height: '40em',
         }}
         level={3}
       >
@@ -92,26 +126,63 @@ function Main() {
 }
 
 function Home() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
+    /*헤더 구성*/ 
     <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
       <div className="logo" style={{ textAlign: 'center' }}>
-        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: '150px' }} />
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
       </div>
-      <div className="menu" style={{ textAlign: 'center', marginTop: '50px' }}>
-        <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-          <li style={{ display: 'inline-block' }}><a href="/boardList" style={{ textDecoration: 'none', color: 'black' }}>board</a></li>
-        </ul>
-      </div>
+      {isMobile ? (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+          {isMenuOpen && (
+            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+          </ul>
+        </div>
+      )}
       <div className="main-text" style={{ display: 'flex', flexDirection: 'column' }}>
-        <h1 style={{ fontSize: '8rem', marginBottom: '0' }}>Let's Go</h1>
-        <h1 style={{ fontSize: '10rem', marginTop: '0' }}><span>Mountain</span></h1>
+        <h1 style={{ fontSize: '4rem', marginBottom: '0' }}>Let's Go</h1>
+        <h1 style={{ fontSize: '5rem', marginTop: '0' }}><span>Mountain</span></h1>
       </div>
     </div>
   );
 }
+
+
 function LoginContainer() {
   const [isLoginSuccess, setIsLoginSuccess] = useState(false);
 
@@ -145,7 +216,7 @@ const Login = ({ isLoginSuccess, setIsLoginSuccess }) => {
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-          <li style={{ display: 'inline-block' }}><a href="/boardList" style={{ textDecoration: 'none', color: 'black' }}>board</a></li>
+          <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
         </ul>
       </div>
       <div>
@@ -329,7 +400,7 @@ function BoardList() {
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/boardList" style={{ textDecoration: 'none', color: 'black' }}>board</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
           </ul>
         </div>
       </div>
@@ -392,15 +463,47 @@ function BoardList() {
   );
 }
 
+function MyMountain() {
+
+  const [reviewlist, setData] = useState(null);
+  const onClick = () => {
+    try{
+      axios.get("/api/posts/user/유저id");
+      setData(response.reviewlist);
+    }catch(e){
+      console.log(e);
+    }
+  };
+
+  return (
+      <div className="container1">
+        <div className="Left">
+          <div className="nickname">닉네임:</div>
+          <div className="grade">등급:</div>
+          <div className="mountainlist">정복한 산 목록</div>
+        </div>
+        <div className="Right">
+          <div className="reviewlist" style={{ position: 'relative' }}>작성한 리뷰
+            <div className="more" style={{ position: 'absolute', top: '0', right: '0' }}>
+            <button type="button" class="btn btn-link"><a href="/">더보기</a></button>
+                                                    {/*링크 연결=> 내 리뷰게시판*/} 
+            </div>
+          </div>
+        </div> 
+      </div> 
+  );
+}
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/main" element={<Main />} />
-        <Route path="/mountain_info" element={<Mountain_info />} />
-        <Route path="/boardList" element={<BoardList />} />
+        <Route path="/main" element={<Kakao />} />
+        <Route path="/mountain_info" element={<Mountain_info />} />  
+        <Route path="/boardList" element={<BoardList />} />  {/*게시판*/}
+        <Route path="/MyMountain" element={<MyMountain />} />  {/*내 등산기록 페이지*/}
       </Routes>
     </Router>
   );
