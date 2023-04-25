@@ -8,6 +8,7 @@ import axios from 'axios';
 import mountainImage from './mountain.jpg'; // 산 이미지를 import 합니다.
 import { Card, Button, Modal, Form, Container } from "react-bootstrap";
 import '@fortawesome/fontawesome-free/css/all.css';
+import styled from 'styled-components';
 
 
 function Kakao() {
@@ -170,7 +171,7 @@ function Home() {
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
           </ul>
         </div>
       )}
@@ -216,7 +217,7 @@ const Login = ({ isLoginSuccess, setIsLoginSuccess }) => {
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
           <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-          <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+          <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
         </ul>
       </div>
       <div>
@@ -343,6 +344,38 @@ function Mountain_info() {
   );
 }
 
+
+function MyMountain() {
+
+  const [reviewlist, setData] = useState(null);
+  const onClick = () => {
+    try{
+      axios.get("/api/posts/user/유저id");
+      setData(response.reviewlist);
+    }catch(e){
+      console.log(e);
+    }
+  };
+
+  return (
+      <div className="container1">
+        <div className="Left">
+          <div className="nickname">닉네임:</div>
+          <div className="grade">등급:</div>
+          <div className="mountainlist">정복한 산 목록</div>
+        </div>
+        <div className="Right">
+          <div className="reviewlist" style={{ position: 'relative' }}>작성한 리뷰
+            <div className="more" style={{ position: 'absolute', top: '0', right: '0' }}>
+            <button type="button" class="btn btn-link"><a href="/">더보기</a></button>
+                                                    {/*링크 연결=> 내 리뷰게시판*/} 
+            </div>
+          </div>
+        </div> 
+      </div> 
+  );
+}
+
 function BoardList() {
   const [board, setBoard] = useState([
     { title: "Friedrich Wilhelm Nietzsche", content: "Weder Manu, noch Plato, noch Confucius, noch die jüdischen und christlichen Lehrer haben je an ihrem Recht zur Lüge gezweifelt", expanded: false },
@@ -462,37 +495,122 @@ function BoardList() {
     </div>
   );
 }
+const Wrapper = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 50px 30px;
+  text-align: center;
+  background-color: #6CAFB7;
+  background-image: linear-gradient(315deg, #6CAFB7 0%, #7AA1D2 74%);
+  border: 2px solid #4D4D4D;
+  border-radius: 30px;
+  box-shadow: 5px 5px 10px #4D4D4D;
+`;
 
-function MyMountain() {
+const Title = styled.h1`
+  font-size: 5rem;
+  margin-bottom: 80px;
+  color: #FFF;
+  text-shadow: 3px 3px #4D4D4D;
+`;
 
-  const [reviewlist, setData] = useState(null);
-  const onClick = () => {
-    try{
-      axios.get("/api/posts/user/유저id");
-      setData(response.reviewlist);
-    }catch(e){
-      console.log(e);
-    }
-  };
+const UserInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 80px;
+  background-color: #FFF;
+  border: 2px solid #4D4D4D;
+  border-radius: 30px;
+  box-shadow: 5px 5px 10px #4D4D4D;
+  padding: 30px;
+`;
+
+const UserInfoTitle = styled.h2`
+  font-size: 4rem;
+  margin-bottom: 40px;
+  color: #4D4D4D;
+  text-shadow: 2px 2px #FFF;
+`;
+
+const UserInfo = styled.p`
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #4D4D4D;
+`;
+
+const LinkWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 60px;
+`;
+
+const ReviewIcon = styled(Link)`
+  font-size: 4rem;
+  color: #FFF;
+  text-shadow: 2px 2px #4D4D4D;
+  border: 2px solid #FFF;
+  padding: 40px;
+  border-radius: 50%;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    color: #4D4D4D;
+    text-shadow: 2px 2px #FFF;
+    background-color: #FFF;
+    transform: scale(1.2);
+  }
+`;
+
+const RecommendLink = styled.a`
+  font-size: 4rem;
+  color: #FFF;
+  text-shadow: 2px 2px #4D4D4D;
+  background-color: #4D4D4D;
+  padding: 40px 60px;
+  border-radius: 30px;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    color: #4D4D4D;
+    text-shadow: 2px 2px #FFF;
+    background-color: #FFF;
+    transform: scale(1.2);
+  }
+`;
+function Mypage() {
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    const user = {
+      name: '홍길동',
+      email: 'hong@example.com',
+      phone: '010-1234-5678',
+    };
+    setUserInfo(user);
+  }, []);
 
   return (
-      <div className="container1">
-        <div className="Left">
-          <div className="nickname">닉네임:</div>
-          <div className="grade">등급:</div>
-          <div className="mountainlist">정복한 산 목록</div>
-        </div>
-        <div className="Right">
-          <div className="reviewlist" style={{ position: 'relative' }}>작성한 리뷰
-            <div className="more" style={{ position: 'absolute', top: '0', right: '0' }}>
-            <button type="button" class="btn btn-link"><a href="/">더보기</a></button>
-                                                    {/*링크 연결=> 내 리뷰게시판*/} 
-            </div>
-          </div>
-        </div> 
-      </div> 
+    <Wrapper>
+      <Title>Mountainview
+        userpage!</Title>
+      <UserInfoWrapper>
+        <UserInfoTitle>회원 정보</UserInfoTitle>
+        <UserInfo>이름: {userInfo.name}</UserInfo>
+        <UserInfo>이메일: {userInfo.email}</UserInfo>
+        <UserInfo>전화번호: {userInfo.phone}</UserInfo>
+      </UserInfoWrapper>
+      <LinkWrapper>
+        <ReviewIcon to="/boardList">리뷰 게시판으로 이동</ReviewIcon>
+        <RecommendLink href="https://www.daum.net">다음 등산 코스 추천</RecommendLink>
+      </LinkWrapper>
+    </Wrapper>
   );
 }
+
+
+
+
 
 function App() {
   return (
@@ -504,6 +622,7 @@ function App() {
         <Route path="/mountain_info" element={<Mountain_info />} />  
         <Route path="/boardList" element={<BoardList />} />  {/*게시판*/}
         <Route path="/MyMountain" element={<MyMountain />} />  {/*내 등산기록 페이지*/}
+        <Route path="/Mypage" element={<Mypage />} />  {/*사용자 정보 출력 페이지*/}
       </Routes>
     </Router>
   );
