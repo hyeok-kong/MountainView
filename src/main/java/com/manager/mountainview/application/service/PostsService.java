@@ -37,12 +37,37 @@ public class PostsService {
     }
 
     @Transactional
+    public Long update(Long id, PostsRequestDto dto) {
+        Posts posts = postsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id : " + id));
+
+        // 요청자와 작성자가 같을때만
+        if(posts.getUser().getId() == dto.getUserid()) {
+            posts.update(dto.getTitle(), dto.getContent());
+        }
+
+        return id;
+    }
+
+    @Transactional
+    public Long delete(Long id) {
+        Posts posts = postsRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 게시글이 없습니다. id : " + id));
+
+        postsRepository.delete(posts);
+
+        return id;
+    }
+
+
+    @Transactional
     public List<PostsListResponseDto> findAllDesc(Pageable pageable) {
         return postsRepository.findAllDesc(pageable).stream()
                 .map(PostsListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
+    // 게시글 내용 반환
     @Transactional
     public PostsResponseDto findById(Long id) {
         Posts posts = postsRepository.findById(id).orElseThrow(() ->
@@ -51,6 +76,7 @@ public class PostsService {
         return new PostsResponseDto(posts);
     }
 
+    // 특정 사용자가 작성한 게시글 모두
     @Transactional
     public List<PostsListResponseDto> findByUserId(Long id, Pageable pageable) {
         return postsRepository.getPostsByUserId(id, pageable).stream()
