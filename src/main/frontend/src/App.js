@@ -11,6 +11,8 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import styled from 'styled-components';
 import OpenAI from 'openai-api';
 import './Chatmountain.css';
+import member from "./member_img.png";
+
 
 
 function Kakao() {
@@ -154,7 +156,7 @@ function Home() {
   };
 
   return (
-    /*헤더 구성*/ 
+    /*헤더 구성*/
     <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
       <div className="logo" style={{ textAlign: 'center' }}>
         <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
@@ -167,7 +169,7 @@ function Home() {
               <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
               <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
               <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
             </ul>
           )}
         </div>
@@ -240,6 +242,8 @@ const Login = ({ isLoginSuccess, setIsLoginSuccess }) => {
     </div>
   )
 };
+
+
 
 
 function Mountain_info() {
@@ -533,7 +537,7 @@ function MyMountain() {
         </div>
       </div>
     </div> 
-  </div>
+   </div>
   );
 }
 
@@ -763,12 +767,120 @@ function Mypage() {
       </UserInfoWrapper>
       <LinkWrapper>
         <ReviewIcon to="/boardList">리뷰 게시판으로 이동</ReviewIcon>
-        <RecommendLink href="https://www.daum.net">다음 등산 코스 추천</RecommendLink>
+        <ReviewIcon to="/chatmountain">다음 등산 코스 추천</ReviewIcon>
       </LinkWrapper>
     </Wrapper>
   );
 }
 
+const openai = require('openai-api');
+const openaiInstance = new OpenAI('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');
+const Chatmountain = () => {
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+
+  const handleInputChange = (event) => {
+    setQuestion(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch('/chatgptapi', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: question,
+        }),
+      });
+      const data = await response.json();
+      setAnswer(data.answer);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+    if (!isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    // Chatmountain 컴포넌트가 사라지도록 구현
+    const chatmountain = document.querySelector('.chat-container');
+    chatmountain.style.display = isMenuOpen ? 'block' : 'none';
+  };
+
+
+  return (
+    /*헤더 구성*/
+    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+      <div className="logo" style={{ textAlign: 'center' }}>
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
+      </div>
+      {isMobile ? (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+          {isMenuOpen && (
+            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+          </ul>
+        </div>
+      )}
+
+
+      <div className="chat-container" style={{ textAlign: 'center', marginTop: '120px' }}>
+        <div className="chat-header">
+          <h1>ChatMountain</h1>
+        </div>
+        <div className="intro-container">
+          <form onSubmit={handleSubmit}>
+            <input type="text" value={question} onChange={handleInputChange} placeholder="질문을 입력하세요" />
+            <button type="submit">질문하기</button>
+          </form>
+          {answer && (
+            <div className="answer-container">
+              <h2>답변</h2>
+              <p>{answer}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+
+  );
+};
 
 
 
@@ -780,10 +892,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/main" element={<Kakao />} />
-        <Route path="/mountain_info" element={<Mountain_info />} />  
+        <Route path="/mountain_info" element={<Mountain_info />} />
         <Route path="/boardList" element={<BoardList />} />  {/*게시판*/}
         <Route path="/MyMountain" element={<MyMountain />} />  {/*내 등산기록 페이지*/}
         <Route path="/Mypage" element={<Mypage />} />  {/*사용자 정보 출력 페이지*/}
+        <Route path="/chatMountain" element={<Chatmountain />} />  {/*chatgpt 활용 산 정보*/}
+
       </Routes>
     </Router>
   );
