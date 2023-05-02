@@ -1,75 +1,241 @@
-/*mMyMountain css */
-.container1 {
-  position: relative;
+/*초기화영역*/
+* {
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
   width: 100%;
-  padding: 20px 20px;
-  height: 70vh;
-  margin-top: 5em;
-  border: 2px solid black;
+  height: auto;
+  /* position: relative; */ /*지워야 카카오맵 서비스 메뉴바 보임*/
+  font-family: "Pretendard";
+  font-size: 17px;
+  color: #1a1a1a;
 }
-
-.Left {
-  float: left;
-  width: 45%;
-  height: 34em;
+ul,
+li {
+  list-style: none;
 }
-
-.nickname {
+a {
+  text-decoration: none;
+  color: inherit;
+}
+table,
+tr,
+td {
+  border-collapse: collapse;
+}
+/*레이아웃*/
+.wrap {
+  width: 100%;
+  height: 100vh;
   position: relative;
-  width: 200px;
-  border: 2px solid black;
-  margin: 5px;
+  padding: 18vh 0 8vh;
+  box-sizing: border-box;
+  overflow: hidden;
 }
-
-.mountainlist {
-  width: 95%;
-  max-width: 550px;
-  margin-top: 14px;
-  border: 2px solid black;
-  height: 31em;
-  margin: 5px;
+.wrap-inner {
+  width: 90%;
+  height: 74vh;
+  max-width: 1200px;
+  background: #fff;
+  border-radius: 10px;
+  margin: auto;
+  box-sizing: border-box;
+  padding: 4vh 0;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.2);
 }
-
-.Right {
-  float: right;
-  width: 45%;
-  height: 34em;
+.inner {
+  width: 90%;
+  margin: auto;
 }
-
-.grade {
+/*멤버*/
+.member-wrap {
+  height: 20%;
+  display: flex;
+  align-items: center;
+}
+.member-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
   position: relative;
-  width: 200px;
-  border: 2px solid black;
-  margin: 5px;
+  overflow: hidden;
+}
+.member-img img {
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.member-name {
+  margin: 0 18px;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.member-level {
+  background: #2f904c;
+  color: #fff;
+  padding: 4px 14px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+/*콘텐츠시작*/
+.content-wrap {
+  height: 80%;
+  display: flex;
+  justify-content: space-between;
 }
 
-.reviewlist {
-  width: 95%;
-  max-width: 550px;
-  margin-top: 14px;
-  border: 2px solid black;
-  height: 35em;
-  margin: 5px;
+.content-wrap > div {
+  box-sizing: border-box;
+  padding: 30px 0;
 }
 
-@media (max-width: 768px) {
-  .container {
-    display: flex;
-    flex-direction: column;
+.mountain {
+  width: 40%;
   }
-  
-  .Left,
-  .Right {
-    float: none;
-    width: 100%;
-    height: auto;
+.review {
+  width: 50%;
+}
+
+.content-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  border-bottom: 1px solid #000;
+  padding-bottom: 18px;
+  position: relative;
+}
+.more-btn {
+  font-size: 0.9rem;
+  font-weight: 300;
+  background: #2f904c;
+  color: #fff;
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 9px;
+  padding: 4px 18px;
+  border-radius: 4px;
+  transition: all 0.4s;
+}
+.more-btn:hover {
+  background: #184d07;
+}
+.list-table {
+  width: 100%;
+  table-layout: fixed;
+}
+.list-table td {
+  padding: 12px 0;
+}
+.list-table tr {
+  border-bottom: 1px solid #e3e3e3;
+}
+.list-table tr:nth-last-child(1) {
+  border-bottom: 1px solid transparent;
+}
+.list-table td.list-data {
+  width: 80%;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.list-table td.list-data p {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.list-table td.list-date {
+  width: 20%;
+  text-align: end;
+  font-size: 0.95rem;
+  color: #c3c3c3;
+  font-weight: 300;
+}
+/*반응형 pc*/
+@media screen and (max-width: 1200px) {
+  html,
+  body {
+    font-size: 14px;
   }
-  
-  .mountainlist,
-  .reviewlist {
-    width: 100%;
-    max-width: none;
+}
+/*반응형 태블릿*/
+@media screen and (max-width: 840px) {
+  html,
+  body {
+    font-size: 17px;
+  }
+  .wrap {
     height: auto;
+    padding: 16vh 0 8vh;
+  }
+  .wrap-inner {
+    height: auto;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+  }
+  .member-wrap {
+    margin-bottom: 4vh;
+  }
+  .content-wrap {
+    height: auto;
+    flex-wrap: wrap;
+  }
+  .content-wrap > div {
+    width: 100%;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.2);
+  }
+  .content-wrap > div:nth-child(1) {
+    margin-bottom: 6vh;
+  }
+}
+/*반응형 모바일*/
+@media screen and (max-width: 414px) {
+  html,
+  body {
+    font-size: 16px;
+  }
+  .header {
+    height: 80px;
+  }
+  .member-img {
+    width: 60px;
+    height: 60px;
+  }
+  .member-name {
+    font-size: 1rem;
+    margin: 0 12px;
+  }
+  .member-level {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+  .content-wrap > div {
+    padding: 30px 20px;
+  }
+  .content-title {
+    font-size: 1.4rem;
+    padding-bottom: 14px;
+  }
+  .more-btn {
+    top: 0;
+  }
+  .list-table td.list-data {
+    width: 60%;
+    font-size: 1rem;
+  }
+  .list-table td.list-date {
+    font-size: 0.8rem;
+    width: 40%;
+  }
+  .list-table td {
+    padding: 14px 0;
   }
 }
 
