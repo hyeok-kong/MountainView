@@ -37,7 +37,7 @@ public class PostsApiController {
     }
 
     // 특정 유저가 작성한 모든 게시글 보기
-    @GetMapping("/api/user/posts/{id}")
+    @GetMapping("/api/posts/user/{id}")
     public List<PostsListResponseDto> findPostsByUserId
             (@PathVariable Long id, @PageableDefault(sort = "id", direction = Sort.Direction.DESC)Pageable pageable) {
         return postsService.findByUserId(id, pageable);
