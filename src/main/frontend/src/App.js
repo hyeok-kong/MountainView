@@ -487,19 +487,19 @@ function MyMountain() {
                   <td className="list-data">
                     <p>{mountainname.name2}</p>
                   </td>
-                  <td className="list-date">{mountainday.date1}</td>
+                  <td className="list-date">{mountainday.date2}</td>
                 </tr>
                 <tr>
                   <td className="list-data">
                     <p>{mountainname.name3}</p>
                   </td>
-                  <td className="list-date">{mountainday.date1}</td>
+                  <td className="list-date">{mountainday.date3}</td>
                 </tr>
                 <tr>
                   <td className="list-data">
                     <p>{mountainname.name4}</p>
                   </td>
-                  <td className="list-date">{mountainday.date1}</td>
+                  <td className="list-date">{mountainday.date4}</td>
                 </tr>
               </table>
             </div>
