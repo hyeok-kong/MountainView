@@ -21,7 +21,7 @@ function Kakao() {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
-
+  //현 위치 로딩하기 위한 함수
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -73,7 +73,7 @@ function Kakao() {
                 <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Home</a></li>
                 <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Login</a></li>
                 <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Services</a></li>
-                <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Mountain</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Mountain</a></li>
               </ul>
             </div>
           )}
@@ -84,7 +84,7 @@ function Kakao() {
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
           </ul>
         </div>
       )}
@@ -487,19 +487,19 @@ function MyMountain() {
                   <td className="list-data">
                     <p>{mountainname.name2}</p>
                   </td>
-                  <td className="list-date">{mountainday.date1}</td>
+                  <td className="list-date">{mountainday.date2}</td>
                 </tr>
                 <tr>
                   <td className="list-data">
                     <p>{mountainname.name3}</p>
                   </td>
-                  <td className="list-date">{mountainday.date1}</td>
+                  <td className="list-date">{mountainday.date3}</td>
                 </tr>
                 <tr>
                   <td className="list-data">
                     <p>{mountainname.name4}</p>
                   </td>
-                  <td className="list-date">{mountainday.date1}</td>
+                  <td className="list-date">{mountainday.date4}</td>
                 </tr>
               </table>
             </div>
@@ -859,7 +859,7 @@ const Chatmountain = () => {
               <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
               <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
               <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
             </ul>
           )}
         </div>
