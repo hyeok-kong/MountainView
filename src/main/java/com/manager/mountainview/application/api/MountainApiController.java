@@ -9,6 +9,7 @@ import com.manager.mountainview.application.service.SpotService;
 import com.manager.mountainview.application.service.TrailService;
 import com.manager.mountainview.domain.mountain.Mountain;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,10 +35,13 @@ public class MountainApiController {
         List<TrailResponseDto> trails = trailService.findTrailByMountain(mountain);
         MountainResponseDto mountainDto = new MountainResponseDto(mountain);
 
+        ResponseEntity<Object> result = mountainService.getMountainDetails(mountain.getName());
+
         return MountainDetailResponseDto.builder()
                 .mountain(mountainDto)
                 .spots(spots)
                 .trails(trails)
+                .result(result)
                 .build();
     }
 }
