@@ -44,7 +44,7 @@ public class Trail {
     private Point2D.Double end;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mountain_code")
+    @JoinColumn(name = "mountain_id")
     private Mountain mountain;
 
 //    @Builder
