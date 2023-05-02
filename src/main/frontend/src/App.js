@@ -20,6 +20,24 @@ function Kakao() {
   const markers = [    {title: '한라산', position: {lat: 33.36137552429086,lng: 126.52942544970011} },    {title: '성산일출봉', position: {lat: 33.45880720408999,lng: 126.56213211127411}}  ];
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          setCurrentLocation({ lat, lng });
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -71,15 +89,12 @@ function Kakao() {
         </div>
       )}
       <Map
-        center={{
-          lat: 33.36137552429086,
-          lng: 126.52942544970011,
-        }}
-        style={{
-          marginTop: '150px',
-          width: '100%',
-          height: '40em',
-        }}
+        center={
+          currentLocation
+            ? { lat: currentLocation.lat, lng: currentLocation.lng }
+            : { lat: 33.36137552429086, lng: 126.52942544970011 }
+        }
+        style={{ marginTop: "150px", width: "100%", height: "40em" }}
         level={3}
       >
         {markers.map((marker, index) => ( /*여러 개의 마커 사용*/ 
@@ -537,7 +552,7 @@ function MyMountain() {
         </div>
       </div>
     </div> 
-   </div>
+  </div>
   );
 }
 
