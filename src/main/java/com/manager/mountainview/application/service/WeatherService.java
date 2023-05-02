@@ -50,7 +50,6 @@ public class WeatherService {
             JSONArray jsonArray = new JSONArray();
             for (int i = 0; i < itemArray.size(); i++) {
                 JSONObject element = (JSONObject) itemArray.get(i);
-                System.out.println("--------- " + element);
 
                 // 강수확률, 현재기온만
                 if (element.get("category").equals("POP") || element.get("category").equals("TMP")) {
@@ -129,6 +128,11 @@ public class WeatherService {
         }
 
         base_time = Integer.toString(btime);
+
+        if(base_time.length() == 1) {
+            base_time = "0" + base_time;
+        }
+
         base_time += "00";
 
         // 산 좌표 변경
