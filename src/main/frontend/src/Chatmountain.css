@@ -1,0 +1,246 @@
+/* Chat Container */
+
+
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background-color: #fff;
+  }
+  
+  /* Chat Header */
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .chat-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #3e3e3e;
+    margin: 0;
+  }
+  
+  .chat-header button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .chat-header button:hover {
+    background-color: #3e8e41;
+  }
+  
+  /* Input Form */
+  .intro-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .intro-container input[type="text"] {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    margin-right: 10px;
+    flex-grow: 1;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .intro-container button[type="submit"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .intro-container button[type="submit"]:hover {
+    background-color: #3e8e41;
+  }
+  
+  /* Answer Container */
+  .answer-container {
+    margin-top: 40px;
+  }
+  
+  .answer-container h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #3e3e3e;
+  }
+  
+  .answer-container p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #4e4e4e;
+  }
+
+
+
+
+
+
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f2f2f2;
+  }
+  
+  /* 채팅 컨테이너 스타일 */
+  .chat-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* 채팅 헤더 스타일 */
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .chat-header h1 {
+    font-size: 2.4rem;
+    font-weight: bold;
+    color: #333333;
+    margin: 0;
+  }
+  
+  .chat-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  /* 채팅 폼 스타일 */
+  .chat-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .chat-input {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    margin-right: 10px;
+    flex-grow: 1;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chat-submit {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chat-submit:hover {
+    background-color: #3e8e41;
+  }
+  
+  /* 답변 컨테이너 스타일 */
+  .answer-container {
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+  }
+  
+  .answer-container h2 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 10px;
+  }
+  
+  .answer-container p {
+    font-size: 1.2rem;
+    margin: 0;
+    line-height: 1.5;
+  }
+  /* 채팅 사이드바 스타일 */
+.chat-sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 300px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .chat-sidebar.active {
+    left: 0;
+  }
+  
+  .chat-sidebar .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2rem;
+    color: #999;
+    cursor: pointer;
+  }
+  
+  .chat-sidebar .content {
+    padding: 20px;
+    overflow-y: auto;
+    height: calc(100% - 60px);
+  }
+  
+  .chat-sidebar .content ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .chat-sidebar .content li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f2f2f2;
+  }
+  
+  .chat-sidebar .content li a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .chat-sidebar .content li a:hover {
+    color: #3e8e41;
+  }
