@@ -20,6 +20,24 @@ function Kakao() {
   const markers = [    {title: '한라산', position: {lat: 33.36137552429086,lng: 126.52942544970011} },    {title: '성산일출봉', position: {lat: 33.45880720408999,lng: 126.56213211127411}}  ];
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          setCurrentLocation({ lat, lng });
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -71,15 +89,12 @@ function Kakao() {
         </div>
       )}
       <Map
-        center={{
-          lat: 33.36137552429086,
-          lng: 126.52942544970011,
-        }}
-        style={{
-          marginTop: '150px',
-          width: '100%',
-          height: '40em',
-        }}
+        center={
+          currentLocation
+            ? { lat: currentLocation.lat, lng: currentLocation.lng }
+            : { lat: 33.36137552429086, lng: 126.52942544970011 }
+        }
+        style={{ marginTop: "150px", width: "100%", height: "40em" }}
         level={3}
       >
         {markers.map((marker, index) => ( /*여러 개의 마커 사용*/ 
@@ -353,194 +368,6 @@ function Mountain_info() {
 }
 
 
-function MyMountain() {
-
-  const [isMobile, setIsMobile] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [reviewlist, setData] = useState(null);
-  const [mountainname,setmountainname] = useState({});
-  const [mountainday,setmountainday] = useState({});
-
-  const onClick = () => {
-    try{
-      axios.get("/api/posts/user/유저id");
-      // setData(response.reviewlist);
-    }catch(e){
-      console.log(e);
-      
-    }
-  };
-  
-  useEffect(()=> {
-    const name = {
-      name1:'한라산',
-      name2:'설악산',
-      name3:'지리산',
-      name4:'북한산'
-    };
-    setmountainname(name);
-  },[]);
-
-  useEffect(()=> {
-    const date = {
-      date1:'2023.03.01',
-      date2:'2023.03.08',
-      date3:'2023.03.15',
-      date4:'2023.03.22'
-    };
-    setmountainday(date);
-  },[]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsMobile(true);
-      } else {
-        setIsMobile(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const handleMenuClick = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  return (
-    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
-      <div className="logo" style={{ textAlign: 'center' }}>
-        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
-      </div>
-      {isMobile ? (
-        <>
-          <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
-          </div>
-          {isMenuOpen && (
-            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', left: '0', height: '100vh', width: '250px', zIndex: '999', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)' }}>
-              <ul style={{ listStyle: 'none', padding: '0' }}>
-                <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Home</a></li>
-                <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Login</a></li>
-                <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Services</a></li>
-                <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Mountain</a></li>
-              </ul>
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
-          </ul>
-        </div>
-      )}
-
-    <div className="Mountainlist">
-      <div className="wrap">
-        <div className="header"></div>
-        <div className="wrap-inner">
-          {/*상단 내정보 영역*/}
-          <div className="member-wrap inner">
-            <div className="member-img">
-              <img src={member} alt="member_img" />
-            </div>
-            <p className="member-name">이용자</p>
-            <p className="member-level">
-              평점 <span>99.99</span>
-            </p>
-          </div>
-          {/*하단 콘텐츠 영역*/}
-          <div className="content-wrap inner">
-            {/*정복한 산 목록*/}
-            <div className="mountain">
-              <p className="content-title">
-                <span>정복한 산 목록</span>
-              </p>
-              <table className="list-table">
-                <tr>
-                  <td className="list-data">
-                    <p>{mountainname.name1}</p>
-                  </td>
-                  <td className="list-date">{mountainday.date1}</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>{mountainname.name2}</p>
-                  </td>
-                  <td className="list-date">{mountainday.date1}</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>{mountainname.name3}</p>
-                  </td>
-                  <td className="list-date">{mountainday.date1}</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>{mountainname.name4}</p>
-                  </td>
-                  <td className="list-date">{mountainday.date1}</td>
-                </tr>
-              </table>
-            </div>
-            {/*작성한 리뷰*/}
-            <div className="review">
-              <p className="content-title">
-                <span>작성한 리뷰</span>
-                <a className="more-btn" href="#none">
-                  View more
-                </a>
-              </p>
-              <table className="list-table">
-                <tr>
-                  <td className="list-data">
-                    <p>
-                      생에 첫 한라산 등반! 너무 힘들었지만 끝까지 포기하지않았다
-                    </p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>
-                      친구들과 설악산 등반을 완료했다
-                    </p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>처음 등산을 시작할땐 산중턱까지도 가기 힘들었지만 결국 해냈다.</p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>등산을 셀프 고문이라고 생각했는데 뿌듯하고 즐거웠다</p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>기분이 좋았다</p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> 
-   </div>
-  );
-}
-
 function BoardList() {
   const [board, setBoard] = useState([
     { title: "Friedrich Wilhelm Nietzsche", content: "Weder Manu, noch Plato, noch Confucius, noch die jüdischen und christlichen Lehrer haben je an ihrem Recht zur Lüge gezweifelt", expanded: false },
@@ -660,6 +487,196 @@ function BoardList() {
     </div>
   );
 }
+
+
+function MyMountain() {
+
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [reviewlist, setData] = useState(null);
+  const [mountainname,setmountainname] = useState({});
+  const [mountainday,setmountainday] = useState({});
+
+  const onClick = () => {
+    try{
+      axios.get("/api/posts/user/유저id");
+      // setData(response.reviewlist);
+    }catch(e){
+      console.log(e);
+      
+    }
+  };
+  
+  useEffect(()=> {
+    const name = {
+      name1:'한라산',
+      name2:'설악산',
+      name3:'지리산',
+      name4:'북한산'
+    };
+    setmountainname(name);
+  },[]);
+
+  useEffect(()=> {
+    const date = {
+      date1:'2023.03.01',
+      date2:'2023.03.08',
+      date3:'2023.03.15',
+      date4:'2023.03.22'
+    };
+    setmountainday(date);
+  },[]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+      <div className="logo" style={{ textAlign: 'center' }}>
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
+      </div>
+      {isMobile ? (
+        <>
+          <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+          </div>
+          {isMenuOpen && (
+            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', left: '0', height: '100vh', width: '250px', zIndex: '999', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)' }}>
+              <ul style={{ listStyle: 'none', padding: '0' }}>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Home</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Login</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Services</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Mountain</a></li>
+              </ul>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+          </ul>
+        </div>
+      )}
+
+    <div className="Mountainlist">
+      <div className="wrap">
+        <div className="header"></div>
+        <div className="wrap-inner">
+          {/*상단 내정보 영역*/}
+          <div className="member-wrap inner">
+            <div className="member-img">
+              <img src={member} alt="member_img" />
+            </div>
+            <p className="member-name">이용자</p>
+            <p className="member-level">
+              평점 <span>99.99</span>
+            </p>
+          </div>
+          {/*하단 콘텐츠 영역*/}
+          <div className="content-wrap inner">
+            {/*정복한 산 목록*/}
+            <div className="mountain">
+              <p className="content-title">
+                <span>정복한 산 목록</span>
+              </p>
+              <table className="list-table">
+                <tr>
+                  <td className="list-data">
+                    <p>{mountainname.name1}</p>
+                  </td>
+                  <td className="list-date">{mountainday.date1}</td>
+                </tr>
+                <tr>
+                  <td className="list-data">
+                    <p>{mountainname.name2}</p>
+                  </td>
+                  <td className="list-date">{mountainday.date2}</td>
+                </tr>
+                <tr>
+                  <td className="list-data">
+                    <p>{mountainname.name3}</p>
+                  </td>
+                  <td className="list-date">{mountainday.date3}</td>
+                </tr>
+                <tr>
+                  <td className="list-data">
+                    <p>{mountainname.name4}</p>
+                  </td>
+                  <td className="list-date">{mountainday.date4}</td>
+                </tr>
+              </table>
+            </div>
+            {/*작성한 리뷰*/}
+            <div className="review">
+              <p className="content-title">
+                <span>작성한 리뷰</span>
+                <a className="more-btn" href="#none">
+                  View more
+                </a>
+              </p>
+              <table className="list-table">
+                <tr>
+                  <td className="list-data">
+                    <p>
+                      생에 첫 한라산 등반! 너무 힘들었지만 끝까지 포기하지않았다
+                    </p>
+                  </td>
+                  <td className="list-date">2022.04.13</td>
+                </tr>
+                <tr>
+                  <td className="list-data">
+                    <p>
+                      친구들과 설악산 등반을 완료했다
+                    </p>
+                  </td>
+                  <td className="list-date">2022.04.13</td>
+                </tr>
+                <tr>
+                  <td className="list-data">
+                    <p>처음 등산을 시작할땐 산중턱까지도 가기 힘들었지만 결국 해냈다.</p>
+                  </td>
+                  <td className="list-date">2022.04.13</td>
+                </tr>
+                <tr>
+                  <td className="list-data">
+                    <p>등산을 셀프 고문이라고 생각했는데 뿌듯하고 즐거웠다</p>
+                  </td>
+                  <td className="list-date">2022.04.13</td>
+                </tr>
+                <tr>
+                  <td className="list-data">
+                    <p>기분이 좋았다</p>
+                  </td>
+                  <td className="list-date">2022.04.13</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+  );
+}
+
 const Wrapper = styled.div`
   max-width: 800px;
   margin: 0 auto;
