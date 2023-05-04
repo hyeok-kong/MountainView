@@ -1,6 +1,5 @@
 package com.manager.mountainview.domain.mountain;
 
-import com.manager.mountainview.application.dto.response.MountainResponseDto;
 import com.manager.mountainview.domain.spot.Spot;
 import com.manager.mountainview.domain.trail.Trail;
 import lombok.Builder;

@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class ReviewResponseDto {
+    private Long id;
     private int score;
     private String content;
     private String username;
@@ -14,6 +15,7 @@ public class ReviewResponseDto {
 
     @Builder
     public ReviewResponseDto(Review entity) {
+        this.id = entity.getId();
         this.score = entity.getScore();
         this.content = entity.getContent();
         this.username = entity.getUser().getName();

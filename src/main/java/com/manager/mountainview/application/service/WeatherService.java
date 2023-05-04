@@ -55,10 +55,11 @@ public class WeatherService {
                 if (element.get("category").equals("POP") || element.get("category").equals("TMP")) {
                     // 현재 시간에 일치하는 데이터만
                     if (element.get("fcstTime").equals(time))
-                        jsonArray.add(element);
+                        result.put(element.get("category"), element.get("fcstValue"));
+//                        jsonArray.add(element);
                 }
             }
-            result.put("result", jsonArray);
+//            result.put("result", jsonArray);
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -103,8 +104,8 @@ public class WeatherService {
         String dataType = "JSON";
         String base_date;
         String base_time;
-        String nx = "55";
-        String ny = "127";
+        String nx = "";
+        String ny = "";
 
         //현재 날짜 yyyyMMdd 포맷으로 변경
         LocalDate date = LocalDate.now();
@@ -168,11 +169,7 @@ public class WeatherService {
         double XO = 43; // 기준점 X좌표(GRID)
         double YO = 136; // 기1준점 Y좌표(GRID)
 
-        //
         // LCC DFS 좌표변환 (위경도->좌표, lat_X:위도,  lng_Y:경도)
-        //
-
-
         double DEGRAD = Math.PI / 180.0;
         double RADDEG = 180.0 / Math.PI;
 
