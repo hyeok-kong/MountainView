@@ -43,11 +43,15 @@ public class Trail {
     // 등산로 끝좌표
     private Point2D.Double end;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "mountain_id")
     private Mountain mountain;
 
-//    @Builder
-//    public Trail(String name, int length, String difficult, int uppl, int godn,
-//    char cncl, char cls, String risk, Point2D.Double start, Point2D.Double end, Mountain mountain)
+    @Builder
+    public Trail(String name, int length, String difficult, int uppl, int godn,
+        char cncl, char cls, String risk, Point2D.Double start, Point2D.Double end, Mountain mountain) {
+        this.name = name;
+        this.length = length;
+
+    }
 }
