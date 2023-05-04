@@ -1,53 +1,57 @@
-//package com.manager.mountainview.application.api;
+package com.manager.mountainview.application.api;
+
+
+import com.manager.mountainview.application.dto.request.*;
+import com.manager.mountainview.application.service.*;
+import com.manager.mountainview.domain.mountain.Mountain;
+import com.manager.mountainview.domain.user.Role;
+import com.manager.mountainview.domain.user.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.PostConstruct;
+import java.awt.geom.Point2D;
+import java.util.stream.IntStream;
+
+
+@RequiredArgsConstructor
+@RestController
+public class TestApiController {
+    private final MountainService mountainService;
+    private final SpotService spotService;
+    private final TrailService trailService;
+    private final UserService userService;
+    private final PostsService postsService;
+
+    @GetMapping("api/hello")
+    public String hello() {
+        return "Hello AWS";
+    }
+    // 테스트용 초기값 설정
+//    @PostConstruct
+//    public void init() {
+//        initMountain();
+//        initSpot();
+//        initTrail();
+//        initUser();
+//        initPost();
+//    }
 //
+//    public void initPost() {
+//        IntStream.range(1, 100).forEach(i ->
+//                postsService.save(new PostsRequestDto("테스트 제목" + i, "테스트 내용" + i, 1L)));
+//    }
 //
-//import com.manager.mountainview.application.dto.request.*;
-//import com.manager.mountainview.application.service.*;
-//import com.manager.mountainview.domain.mountain.Mountain;
-//import com.manager.mountainview.domain.user.Role;
-//import com.manager.mountainview.domain.user.User;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.web.bind.annotation.RestController;
+//    public void initUser() {
+//        User user1 = User.builder()
+//                .email("khb6997@gmail.com")
+//                .name("권혁빈")
+//                .role(Role.USER)
+//                .build();
 //
-//import javax.annotation.PostConstruct;
-//import java.awt.geom.Point2D;
-//import java.util.stream.IntStream;
-//
-//
-//@RequiredArgsConstructor
-////@RestController
-////public class TestApiController {
-////    private final MountainService mountainService;
-////    private final SpotService spotService;
-////    private final TrailService trailService;
-////    private final UserService userService;
-////    private final PostsService postsService;
-////
-////
-////    // 테스트용 초기값 설정
-////    @PostConstruct
-////    public void init() {
-////        initMountain();
-////        initSpot();
-////        initTrail();
-////        initUser();
-////        initPost();
-////    }
-////
-////    public void initPost() {
-////        IntStream.range(1, 100).forEach(i ->
-////                postsService.save(new PostsRequestDto("테스트 제목" + i, "테스트 내용" + i, 1L)));
-////    }
-////
-////    public void initUser() {
-////        User user1 = User.builder()
-////                .email("khb6997@gmail.com")
-////                .name("권혁빈")
-////                .role(Role.USER)
-////                .build();
-////
-////        User user2 = User.builder()
-////                .email("test@test")
+//        User user2 = User.builder()
+//                .email("test@test")
 //                .name("테스트 유저")
 //                .role(Role.USER)
 //                .build();
@@ -159,4 +163,4 @@
 //                .build();
 //        trailService.save(dto);
 //    }
-//}
+}
