@@ -15,7 +15,6 @@ public class UserRequestDto {
     private Role role;
     private char gender;
     private int age;
-    private boolean isSubmitted;
 
     @Builder
     public UserRequestDto(User user) {
@@ -25,7 +24,6 @@ public class UserRequestDto {
         this.role = user.getRole();
         this.gender = user.getGender();
         this.age = user.getAge();
-        this.isSubmitted = user.isSubmitted();
     }
 
     public User toEntity() {
@@ -36,7 +34,6 @@ public class UserRequestDto {
                 .role(role)
                 .gender(gender)
                 .age(age)
-                .isSubmitted(isSubmitted)
                 .build();
     }
 }

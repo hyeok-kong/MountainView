@@ -1,7 +1,8 @@
-package com.manager.mountainview.domain.review;
+package com.manager.mountainview.domain.comment;
+
 
 import com.manager.mountainview.domain.BaseTimeEntity;
-import com.manager.mountainview.domain.mountain.Mountain;
+import com.manager.mountainview.domain.posts.Posts;
 import com.manager.mountainview.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,34 +13,31 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Review extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int score;
-
+    @Column(nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "mountain_id")
-    private Mountain mountain;
+    @JoinColumn(name = "posts_id")
+    private Posts posts;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Review(int score, String content, Mountain mountain, User user) {
-        this.score = score;
+    public Comment(String content, User user, Posts posts) {
         this.content = content;
-        this.mountain = mountain;
+        this.posts = posts;
         this.user = user;
     }
 
-    public void update(int score, String content) {
-        this.score = score;
+    public void update(String content) {
         this.content = content;
     }
 }
