@@ -22,7 +22,7 @@ public class Review extends BaseTimeEntity {
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "mountain_id")
     private Mountain mountain;
 

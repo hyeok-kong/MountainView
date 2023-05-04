@@ -26,7 +26,7 @@ public class Spot {
     @Column(nullable = false)
     private Point2D.Double location;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "mountain_id")
     private Mountain mountain;
 

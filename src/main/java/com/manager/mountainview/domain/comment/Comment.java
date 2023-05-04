@@ -22,16 +22,13 @@ public class Comment extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "posts_id")
     private Posts posts;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
 
     @Builder
     public Comment(String content, User user, Posts posts) {
