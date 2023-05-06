@@ -19,7 +19,6 @@ public class Spot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
     //h2에서 Point2D 사용 위한 설정
