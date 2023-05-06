@@ -1,13 +1,12 @@
 package com.manager.mountainview.application.api;
 
+import com.manager.mountainview.application.dto.request.SpotRequestDto;
 import com.manager.mountainview.application.dto.response.SpotResponseDto;
 import com.manager.mountainview.application.service.MountainService;
 import com.manager.mountainview.application.service.SpotService;
 import com.manager.mountainview.domain.mountain.Mountain;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,6 +15,11 @@ import java.util.List;
 public class SpotApiController {
     private final MountainService mountainService;
     private final SpotService spotService;
+
+    @PostMapping("/api/spot")
+    public Long save(@RequestBody SpotRequestDto requestDto) {
+        return spotService.save(requestDto);
+    }
 
     @GetMapping("/api/spots")
     public List<SpotResponseDto> findAllSpot() {
