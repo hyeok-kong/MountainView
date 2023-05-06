@@ -10,22 +10,15 @@ import java.awt.geom.Point2D;
 @Getter
 public class SpotRequestDto {
     private String name;
-    private Point2D.Double location;
-    private Mountain mountain;
+    private Double posx;
+    private Double posy;
+    private String code;
 
     @Builder
-    public SpotRequestDto(String name, Point2D.Double location, Mountain mountain) {
+    public SpotRequestDto(String name, Double posx, Double posy, String code) {
         this.name = name;
-        this.location = location;
-        this.mountain = mountain;
-    }
-
-
-    public Spot toEntity() {
-        return new Spot().builder()
-                .name(name)
-                .location(location)
-                .mountain(mountain)
-                .build();
+        this.posx = posx;
+        this.posy = posy;
+        this.code = code;
     }
 }

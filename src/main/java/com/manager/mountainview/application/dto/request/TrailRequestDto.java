@@ -26,27 +26,13 @@ public class TrailRequestDto {
 
     private String risk;
 
-    private Point2D.Double start;
+    private Double startx;
+    private Double starty;
 
-    private Point2D.Double end;
+    private Double endx;
+    private Double endy;
 
-    private Mountain mountain;
+    private String code;
 
-    public Trail toEntity() {
-        Trail trail = Trail.builder()
-                .name(name)
-                .length(length)
-                .difficult(difficult)
-                .uppl(uppl)
-                .godn(godn)
-                .cnrl(cnrl)
-                .cls(cls)
-                .risk(risk)
-                .start(end)
-                .end(end)
-                .mountain(mountain)
-                .build();
-
-        return trail;
-    }
+    private String type;
 }
