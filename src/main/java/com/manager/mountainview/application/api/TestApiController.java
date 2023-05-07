@@ -31,10 +31,10 @@ public class TestApiController {
         return "Hello AWS";
     }
 
-    @GetMapping("api/admin/addTest")
-    public void addtest() {
-        initUser();
-    }
+//    @GetMapping("api/admin/addTest")
+//    public void addtest() {
+//        initUser();
+//    }
 
 
     // 테스트용 초기값 설정
@@ -52,30 +52,30 @@ public class TestApiController {
 //                postsService.save(new PostsRequestDto("테스트 제목" + i, "테스트 내용" + i, 1L)));
 //    }
 //
-    @Autowired
-    public void initUser() {
-//        User user1 = User.builder()
-//                .email("khb6997@gmail.com")
-//                .name("권혁빈")
+//    @Autowired
+//    public void initUser() {
+////        User user1 = User.builder()
+////                .email("khb6997@gmail.com")
+////                .name("권혁빈")
+////                .role(Role.USER)
+////                .build();
+//
+//        User user2 = User.builder()
+//                .email("test@test")
+//                .name("테스트 유저")
 //                .role(Role.USER)
 //                .build();
-
-        User user2 = User.builder()
-                .email("test@test")
-                .name("테스트 유저")
-                .role(Role.USER)
-                .build();
-
-        UserRequestDto dto = UserRequestDto.builder()
-                .user(user2)
-                .build();
-        userService.save(dto);
+//
+//        UserRequestDto dto = UserRequestDto.builder()
+//                .user(user2)
+//                .build();
+//        userService.save(dto);
 //
 //        dto = UserRequestDto.builder()
 //                .user(user2)
 //                .build();
 //        userService.save(dto);
-    }
+//    }
 //
 //    public void initMountain() {
 //        Point2D.Double point =  new Point2D.Double(37.888751032177076, 127.72831210287406);
