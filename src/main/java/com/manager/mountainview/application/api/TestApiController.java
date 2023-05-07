@@ -7,6 +7,7 @@ import com.manager.mountainview.domain.mountain.Mountain;
 import com.manager.mountainview.domain.user.Role;
 import com.manager.mountainview.domain.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,27 +31,28 @@ public class TestApiController {
         return "Hello AWS";
     }
 
-//    @GetMapping("api/admin/addTest")
-//    public void addtest() {
-//        initUser();
-//    }
+    @GetMapping("api/admin/addTest")
+    public void addtest() {
+        initUser();
+    }
 
 
     // 테스트용 초기값 설정
-    @PostConstruct
-    public void init() {
+//    @PostConstruct
+//    public void init() {
 ////        initMountain();
 ////        initSpot();
 ////        initTrail();
-        initUser();
+//        initUser();
 ////        initPost();
-    }
+//    }
 //
 //    public void initPost() {
 //        IntStream.range(1, 100).forEach(i ->
 //                postsService.save(new PostsRequestDto("테스트 제목" + i, "테스트 내용" + i, 1L)));
 //    }
 //
+    @Autowired
     public void initUser() {
 //        User user1 = User.builder()
 //                .email("khb6997@gmail.com")
