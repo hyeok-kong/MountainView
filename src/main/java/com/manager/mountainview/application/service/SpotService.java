@@ -51,7 +51,7 @@ public class SpotService {
     public Long save(SpotRequestDto requestDto) {
         JSONObject result;
 
-        String accessToken = "549f84f4-cfb5-46d3-ab98-401978826bf4";
+        String accessToken = "baf75df6-9b25-4a69-874c-0478ab9b81d3";
         String base_url = "https://sgisapi.kostat.go.kr";
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(base_url);
