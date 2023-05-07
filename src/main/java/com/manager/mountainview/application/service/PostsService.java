@@ -24,14 +24,15 @@ public class PostsService {
 
     @Transactional
     public Long save(PostsRequestDto requestDto) {
-        User user = userService.findById(requestDto.getUserid());
+//        User user = userService.findById(requestDto.getUserid());
 
         Posts posts = Posts.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
+                .user(userService.findById(requestDto.getUserid()))
                 .build();
 
-        posts.setUser(user);
+
 
         return postsRepository.save(posts).getId();
     }
