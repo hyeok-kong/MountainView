@@ -30,11 +30,11 @@ public class TestApiController {
         return "Hello AWS";
     }
 
-    @GetMapping("api/admin/addTest")
-    public void addtest() {
-        initUser();
-    }
-
+//    @GetMapping("api/admin/addTest")
+//    public void addtest() {
+//        initUser();
+//    }
+//
 
     // 테스트용 초기값 설정
 //    @PostConstruct
