@@ -15,18 +15,18 @@ public class UserApiController {
 
     private final UserService userService;
 
-    @GetMapping("api/admin/addtestuser")
-    public Long addTest() {
-        User user = User.builder()
-                .email("testemail@ggm.com")
-                .name("테스트유저")
-                .role(Role.USER)
-                .build();
-
-        UserRequestDto userRequestDto = UserRequestDto.builder()
-                .user(user)
-                .build();
-
-        return userService.save(userRequestDto);
-    }
+//    @GetMapping("api/admin/addtestuser")
+//    public Long addTest() {
+//        User user = User.builder()
+//                .email("testemail@ggm.com")
+//                .name("테스트유저")
+//                .role(Role.USER)
+//                .build();
+//
+//        UserRequestDto userRequestDto = UserRequestDto.builder()
+//                .user(user)
+//                .build();
+//
+//        return userService.save(userRequestDto);
+//    }
 }

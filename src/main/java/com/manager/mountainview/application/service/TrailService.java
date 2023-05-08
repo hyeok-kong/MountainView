@@ -51,7 +51,7 @@ public class TrailService {
     public Long save(TrailRequestDto requestDto) {
         JSONObject result;
 
-        String accessToken = "62a14a82-ae57-498f-b307-d0d2009b11c0";
+        String accessToken = "";
         String base_url = "https://sgisapi.kostat.go.kr";
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(base_url);
@@ -61,8 +61,6 @@ public class TrailService {
                 .uriBuilderFactory(factory)
                 .baseUrl(base_url)
                 .build();
-
-        System.out.println("/OpenAPI3/transformation/transcoord.json?src=5186&dst=4326&posX="+ requestDto.getStartx() + "&posY=" + requestDto.getStarty() + "&accessToken=" + accessToken);
 
         String response = wc.get()
                 .uri(uriBuilder -> uriBuilder.path("/OpenAPI3/transformation/transcoord.json?src=5186&dst=4326&posX="+ requestDto.getStartx() + "&posY=" + requestDto.getStarty() + "&accessToken=" + accessToken)
@@ -82,8 +80,6 @@ public class TrailService {
 
         Point2D.Double start = new Point2D.Double(startx, starty);
         Point2D.Double end = new Point2D.Double(endx, endy);
-
-        System.out.println(requestDto.getCode());
 
         Trail trail = Trail.builder()
                 .name(requestDto.getName())
