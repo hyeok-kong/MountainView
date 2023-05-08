@@ -16,10 +16,10 @@ public class SpotApiController {
     private final MountainService mountainService;
     private final SpotService spotService;
 
-    @PostMapping("/api/spot")
-    public Long save(@RequestBody SpotRequestDto requestDto) {
-        return spotService.save(requestDto);
-    }
+//    @PostMapping("/api/spot")
+//    public Long save(@RequestBody SpotRequestDto requestDto) {
+//        return spotService.save(requestDto);
+//    }
 
     @GetMapping("/api/spots")
     public List<SpotResponseDto> findAllSpot() {

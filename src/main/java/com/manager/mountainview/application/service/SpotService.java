@@ -34,7 +34,7 @@ public class SpotService {
             JSONObject jsonObj = (JSONObject) jsonParser.parse(jsonStr);
 
             JSONObject res = (JSONObject) jsonObj.get("result");
-            System.out.println("==============result :" + jsonStr);
+
             if(mode == 1) {
                 result = res.get("posX").toString();
             } else {
@@ -52,7 +52,7 @@ public class SpotService {
     public Long save(SpotRequestDto requestDto) {
         JSONObject result;
 
-        String accessToken = "35347ee9-a477-43de-9713-6d8aae89a520";
+        String accessToken = "";
         String base_url = "https://sgisapi.kostat.go.kr";
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(base_url);

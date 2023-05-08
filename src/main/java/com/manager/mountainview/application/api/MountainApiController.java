@@ -22,10 +22,10 @@ public class MountainApiController {
     private final SpotService spotService;
     private final TrailService trailService;
 
-    @PostMapping("/api/mountain")
-    public Long save(@RequestBody MountainRequestDto requestDto) {
-        return mountainService.save(requestDto);
-    }
+//    @PostMapping("/api/mountain")
+//    public Long save(@RequestBody MountainRequestDto requestDto) {
+//        return mountainService.save(requestDto);
+//    }
 
     @GetMapping("/api/mountain")
     public List<MountainResponseDto> findAll() {

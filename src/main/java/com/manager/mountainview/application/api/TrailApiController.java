@@ -16,10 +16,10 @@ public class TrailApiController {
     private final MountainService mountainService;
     private final TrailService trailService;
 
-    @PostMapping("/api/trail")
-    public Long save(@RequestBody TrailRequestDto requestDto) {
-        return trailService.save(requestDto);
-    }
+//    @PostMapping("/api/trail")
+//    public Long save(@RequestBody TrailRequestDto requestDto) {
+//        return trailService.save(requestDto);
+//    }
 
     @GetMapping("/api/trails")
     public List<TrailResponseDto> findAllSpot() {
