@@ -37,8 +37,10 @@ public class Trail {
     // 위험구간내용
     private String risk;
     // 등산로 시작좌표
+    @Column(name = "startp")
     private Point2D.Double start;
     // 등산로 끝좌표
+    @Column(name = "endp")
     private Point2D.Double end;
 
     private String type;

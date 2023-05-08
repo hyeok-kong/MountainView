@@ -138,6 +138,8 @@ public class WeatherService {
 
         // 산 좌표 변경
         Mountain mountain = mountainService.findByCode(code);
+
+        System.out.println("--------======= mountain : " + mountain.getName() + ", " + mountain.getLocation().getX()+ ", " + mountain.getLocation().getY());
         Double posx = mountain.getLocation().getX();
         Double posy = mountain.getLocation().getY();
 

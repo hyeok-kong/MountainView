@@ -4,10 +4,12 @@ import com.manager.mountainview.domain.mountain.Mountain;
 import com.manager.mountainview.domain.spot.Spot;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.awt.geom.Point2D;
 
 @Getter
+@NoArgsConstructor
 public class SpotRequestDto {
     private String name;
     private Double posx;
