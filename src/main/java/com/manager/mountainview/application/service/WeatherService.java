@@ -139,8 +139,10 @@ public class WeatherService {
         // 산 좌표 변경
         Mountain mountain = mountainService.findByCode(code);
 
-        Double posx = mountain.getLocation().getX();
-        Double posy = mountain.getLocation().getY();
+        // 경도, 위도로 저장됨
+        // y, x로 요청
+        Double posy = mountain.getLocation().getX();
+        Double posx = mountain.getLocation().getY();
 
         LatXLngY pos = convertToGrid(posx, posy);
 
