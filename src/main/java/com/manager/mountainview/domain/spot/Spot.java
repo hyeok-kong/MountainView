@@ -5,8 +5,6 @@ import com.manager.mountainview.domain.mountain.Mountain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
 import java.awt.geom.Point2D;
