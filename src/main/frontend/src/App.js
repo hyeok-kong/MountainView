@@ -12,6 +12,8 @@ import styled from 'styled-components';
 import OpenAI from 'openai-api';
 import './Chatmountain.css';
 import member from "./member_img.png";
+import { useMediaQuery } from 'react-responsive';
+
 
 
 
@@ -376,34 +378,41 @@ function BoardList() {
   ]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [userid, setUserid] = useState("");
   const [showModal, setShowModal] = useState(false);
 
-  const fetchBoardData = async () => {
-    try {
-      const response = await axios.get("/api/board");
-      setBoard(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+  const fetchBoardData = () => {
+    axios.get("http://ec2-3-37-214-183.ap-northeast-2.compute.amazonaws.com:8080/api/posts")
+      .then(response => {
+        const newBoardData = response.data;
+        setBoard(newBoardData);
+        setUserid("1")
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   useEffect(() => {
     fetchBoardData();
   }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await axios.post("/api/board", { title, content });
-      setBoard([...board, response.data]); // response.data에 새로 생성된 게시글이 담겨 있음
-      setTitle("");
-      setContent("");
-      setShowModal(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const handleSubmit = (event) => {
+    axios.post("http://ec2-3-37-214-183.ap-northeast-2.compute.amazonaws.com:8080/api/posts", { title, content, userid })
+      .then(response => {
+        const newBoardData = Array.isArray(response.data.content) ? response.data.content : [response.data.content];
+        setBoard([...board, ...newBoardData]);
+        setTitle("");
+        setContent("");
+        setShowModal(false);
+        fetchBoardData(); // <-- add this line to refresh the board
 
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
   const handleButtonClick = () => {
     setShowModal(true);
   };
@@ -434,8 +443,8 @@ function BoardList() {
           {board.map((post, index) => (
             <Card key={index} className="mb-3" style={{ backgroundColor: '#ffffff' }}>
               <Card.Body>
-                <Card.Title>{post.title}</Card.Title>
-                {post.content.length > 50 && !post.expanded ? (
+              <Card.Title>{post && post.title}</Card.Title>
+                {post && post.content && post.content.length > 50 && !post.expanded ? (
                   <div>
                     <Card.Text>{post.content.substring(0, 50)}...</Card.Text>
                     <Button onClick={() => handleExpandContent(index)}>Read more</Button>
@@ -487,7 +496,44 @@ function BoardList() {
     </div>
   );
 }
+const Header = () => {
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+      <div className="logo" style={{ textAlign: 'center' }}>
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
+      </div>
+      {isMobile ? (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+          {isMenuOpen && (
+            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
 
 function MyMountain() {
 
@@ -540,6 +586,8 @@ function MyMountain() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+
+
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -565,6 +613,7 @@ function MyMountain() {
             </div>
           )}
         </>
+
       ) : (
         <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
           <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
@@ -677,120 +726,241 @@ function MyMountain() {
   );
 }
 
+
 const Wrapper = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 50px 30px;
-  text-align: center;
-  background-color: #6CAFB7;
-  background-image: linear-gradient(315deg, #6CAFB7 0%, #7AA1D2 74%);
-  border: 2px solid #4D4D4D;
-  border-radius: 30px;
-  box-shadow: 5px 5px 10px #4D4D4D;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  grid-template-rows: 1fr;
+  gap: 50px;
+  margin: 150px auto;
+  max-width: 1000px;
+  padding: 50px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+`;
+
+const Divider = styled.div`
+  height: 100%;
+  border-left: 1px solid #ccc;
 `;
 
 const Title = styled.h1`
-  font-size: 5rem;
-  margin-bottom: 80px;
-  color: #FFF;
-  text-shadow: 3px 3px #4D4D4D;
+  font-size: 36px;
+  margin-bottom: 50px;
+  text-align: center;
+  color: #333;
+  font-weight: bold;
+
+
 `;
 
 const UserInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 80px;
-  background-color: #FFF;
-  border: 2px solid #4D4D4D;
-  border-radius: 30px;
-  box-shadow: 5px 5px 10px #4D4D4D;
-  padding: 30px;
+  margin-top: 50px;
+  font-weight: bold;
+
 `;
 
 const UserInfoTitle = styled.h2`
-  font-size: 4rem;
-  margin-bottom: 40px;
-  color: #4D4D4D;
-  text-shadow: 2px 2px #FFF;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: bold;
+  
 `;
 
 const UserInfo = styled.p`
-  font-size: 3rem;
-  margin-bottom: 20px;
-  color: #4D4D4D;
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #666;
+  font-weight: bold;
+
 `;
 
 const LinkWrapper = styled.div`
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: 60px;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 50px;
+  font-weight: bold;
+
 `;
 
-const ReviewIcon = styled(Link)`
-  font-size: 4rem;
-  color: #FFF;
-  text-shadow: 2px 2px #4D4D4D;
-  border: 2px solid #FFF;
-  padding: 40px;
+const ReviewIcon = styled.a`
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #333;
+  font-size: 20px;
+  text-align: center;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+  font-weight: bold;
+
+`;
+
+const EditButton = styled.button`
+  background-color: #8fbc8f;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  &:hover {
+    background-color: #90ee90;
+    cursor: pointer;
+  }
+  font-weight: bold;
+
+`;
+
+const AvatarWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 50px;
+  font-weight: bold;
+
+`;
+
+const AvatarTitle = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: bold;
+
+`;
+
+const Avatar = styled.img`
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    color: #4D4D4D;
-    text-shadow: 2px 2px #FFF;
-    background-color: #FFF;
-    transform: scale(1.2);
-  }
 `;
 
-const RecommendLink = styled.a`
-  font-size: 4rem;
-  color: #FFF;
-  text-shadow: 2px 2px #4D4D4D;
-  background-color: #4D4D4D;
-  padding: 40px 60px;
-  border-radius: 30px;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    color: #4D4D4D;
-    text-shadow: 2px 2px #FFF;
-    background-color: #FFF;
-    transform: scale(1.2);
-  }
-`;
 function Mypage() {
   const [userInfo, setUserInfo] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const user = {
       name: '홍길동',
       email: 'hong@example.com',
       phone: '010-1234-5678',
+      avatar: 'https://placehold.it/200x200',
     };
     setUserInfo(user);
   }, []);
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserInfo((prevUserInfo) => ({
+      ...prevUserInfo,
+      [name]: value,
+    }));
+  };
 
   return (
-    <Wrapper>
-      <Title>Mountainview
-        userpage!</Title>
-      <UserInfoWrapper>
-        <UserInfoTitle>회원 정보</UserInfoTitle>
-        <UserInfo>이름: {userInfo.name}</UserInfo>
-        <UserInfo>이메일: {userInfo.email}</UserInfo>
-        <UserInfo>전화번호: {userInfo.phone}</UserInfo>
-      </UserInfoWrapper>
-      <LinkWrapper>
-        <ReviewIcon to="/boardList">리뷰 게시판으로 이동</ReviewIcon>
-        <ReviewIcon to="/chatmountain">다음 등산 코스 추천</ReviewIcon>
-      </LinkWrapper>
-    </Wrapper>
+    <>
+      <Header />
+      <Wrapper>
+        <Title>마이페이지</Title>
+        <UserInfoWrapper>
+          <UserInfoTitle>회원 정보</UserInfoTitle>
+          {isEditing ? (
+            <>
+              <UserInfo>
+                <label htmlFor="name">이름:</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={userInfo.name}
+                  onChange={handleChange}
+                />
+              </UserInfo>
+              <UserInfo>
+                <label htmlFor="email">이메일:</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={userInfo.email}
+                  onChange={handleChange}
+                />
+              </UserInfo>
+              <UserInfo>
+                <label htmlFor="phone">전화번호:</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={userInfo.phone}
+                  onChange={handleChange}
+                />
+              </UserInfo>
+              <EditButton onClick={handleSave}>저장</EditButton>
+              <EditButton onClick={handleCancel}>취소</EditButton>
+            </>
+          ) : (
+            <>
+              <UserInfo>
+                <label>이름:</label>
+                <span>{userInfo.name}</span>
+              </UserInfo>
+              <UserInfo>
+                <label>이메일:</label>
+                <span>{userInfo.email}</span>
+              </UserInfo>
+              <UserInfo>
+                <label>전화번호:</label>
+                <span>{userInfo.phone}</span>
+              </UserInfo>
+              <EditButton onClick={handleEdit}>수정</EditButton>
+            </>
+          )}
+        </UserInfoWrapper>
+        <Divider />
+        <LinkWrapper>
+          <UserInfoTitle>링크</UserInfoTitle>
+          <ReviewIcon href="/boardList">리뷰 게시판</ReviewIcon>
+          <ReviewIcon href="/chatmountain">ChatMountain</ReviewIcon>
+        </LinkWrapper>
+        <Divider />
+        <AvatarWrapper>
+          <AvatarTitle>프로필 사진</AvatarTitle>
+          <Avatar src={userInfo.avatar} alt="프로필 사진" />
+        </AvatarWrapper>
+      </Wrapper>
+    </>
   );
 }
 
 const openai = require('openai-api');
+
+
+
 const openaiInstance = new OpenAI('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');
 const Chatmountain = () => {
   const [question, setQuestion] = useState('');
