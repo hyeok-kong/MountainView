@@ -3,12 +3,15 @@ package com.manager.mountainview.application.dto.request;
 import com.manager.mountainview.domain.posts.Posts;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class PostsRequestDto {
     private String title;
     private String content;
     private Long userid;
+
 
     @Builder
     public PostsRequestDto(String title, String content, Long userid) {

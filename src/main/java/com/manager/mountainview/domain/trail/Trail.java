@@ -20,10 +20,8 @@ public class Trail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private double length;
 
     private String difficult;
@@ -39,15 +37,32 @@ public class Trail {
     // 위험구간내용
     private String risk;
     // 등산로 시작좌표
+    @Column(name = "startp")
     private Point2D.Double start;
     // 등산로 끝좌표
+    @Column(name = "endp")
     private Point2D.Double end;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mountain_code")
+    private String type;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "mountain_id")
     private Mountain mountain;
 
-//    @Builder
-//    public Trail(String name, int length, String difficult, int uppl, int godn,
-//    char cncl, char cls, String risk, Point2D.Double start, Point2D.Double end, Mountain mountain)
+    @Builder
+    public Trail(String name, int length, String difficult, int uppl, int godn,
+        char cnrl, char cls, String risk, Point2D.Double start, Point2D.Double end, String type, Mountain mountain) {
+        this.name = name;
+        this.length = length;
+        this.difficult = difficult;
+        this.uppl = uppl;
+        this.godn = godn;
+        this.cnrl = cnrl;
+        this.cls = cls;
+        this.risk = risk;
+        this.start = start;
+        this.end = end;
+        this.type = type;
+        this.mountain = mountain;
+    }
 }

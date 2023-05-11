@@ -6,7 +6,6 @@ import com.manager.mountainview.domain.posts.Posts;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,23 +39,20 @@ public class User extends BaseTimeEntity {
     @Column(length = 200)
     private int age;
 
-    @ColumnDefault("false")
-    @Column(nullable = false)
-    private boolean isSubmitted;
 
     @OneToMany(mappedBy = "user")
     private List<Posts> postsList = new ArrayList<>();
 
 
+
     @Builder
-    public User(String name, String email, Role role, String nickname, char gender, int age, boolean isSubmitted) {
+    public User(String name, String email, Role role, String nickname, char gender, int age) {
         this.name = name;
         this.email = email;
         this.role = role;
         this.nickname = nickname;
         this.gender = gender;
         this.age = age;
-        this.isSubmitted = isSubmitted;
     }
 
     public User update(String name) {

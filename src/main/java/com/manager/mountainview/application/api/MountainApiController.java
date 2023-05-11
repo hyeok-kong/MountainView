@@ -1,5 +1,6 @@
 package com.manager.mountainview.application.api;
 
+import com.manager.mountainview.application.dto.request.MountainRequestDto;
 import com.manager.mountainview.application.dto.response.MountainDetailResponseDto;
 import com.manager.mountainview.application.dto.response.MountainResponseDto;
 import com.manager.mountainview.application.dto.response.SpotResponseDto;
@@ -9,9 +10,8 @@ import com.manager.mountainview.application.service.SpotService;
 import com.manager.mountainview.application.service.TrailService;
 import com.manager.mountainview.domain.mountain.Mountain;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +21,11 @@ public class MountainApiController {
     private final MountainService mountainService;
     private final SpotService spotService;
     private final TrailService trailService;
+
+//    @PostMapping("/api/mountain")
+//    public Long save(@RequestBody MountainRequestDto requestDto) {
+//        return mountainService.save(requestDto);
+//    }
 
     @GetMapping("/api/mountain")
     public List<MountainResponseDto> findAll() {
@@ -34,10 +39,13 @@ public class MountainApiController {
         List<TrailResponseDto> trails = trailService.findTrailByMountain(mountain);
         MountainResponseDto mountainDto = new MountainResponseDto(mountain);
 
+        ResponseEntity<Object> result = mountainService.getMountainDetails(mountain.getName());
+
         return MountainDetailResponseDto.builder()
                 .mountain(mountainDto)
                 .spots(spots)
                 .trails(trails)
+                .result(result)
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.manager.mountainview.application.dto.response;
 
 import com.manager.mountainview.domain.trail.Trail;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.awt.geom.Point2D;
@@ -24,10 +25,13 @@ public class TrailResponseDto {
 
     private String risk;
 
-    private Point2D.Double start;
+    private Point2D.Double startp;
 
-    private Point2D.Double end;
+    private Point2D.Double endp;
 
+    private String type;
+
+    @Builder
     public TrailResponseDto(Trail entity) {
         this.id = entity.getId();
         this.name = entity.getName();
@@ -38,7 +42,8 @@ public class TrailResponseDto {
         this.cnrl = entity.getCnrl();
         this.cls = entity.getCls();
         this.risk = entity.getRisk();
-        this.start = entity.getStart();
-        this.end = entity.getEnd();
+        this.startp = entity.getStart();
+        this.endp = entity.getEnd();
+        this.type = entity.getType();
     }
 }

@@ -4,11 +4,12 @@ import com.manager.mountainview.domain.mountain.Mountain;
 import com.manager.mountainview.domain.trail.Trail;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.awt.geom.Point2D;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class TrailRequestDto {
     private String name;
 
@@ -26,27 +27,32 @@ public class TrailRequestDto {
 
     private String risk;
 
-    private Point2D.Double start;
+    private Double startx;
+    private Double starty;
 
-    private Point2D.Double end;
+    private Double endx;
+    private Double endy;
 
-    private Mountain mountain;
+    private String code;
 
-    public Trail toEntity() {
-        Trail trail = Trail.builder()
-                .name(name)
-                .length(length)
-                .difficult(difficult)
-                .uppl(uppl)
-                .godn(godn)
-                .cnrl(cnrl)
-                .cls(cls)
-                .risk(risk)
-                .start(end)
-                .end(end)
-                .mountain(mountain)
-                .build();
+    private String type;
 
-        return trail;
+    @Builder
+    public TrailRequestDto(String name, double length, String difficult, int uppl, int godn, char cnrl,
+                           char cls, String risk, Double startx, Double starty, Double endx, Double endy, String code, String type) {
+        this.name = name;
+        this.length = length;
+        this.difficult = difficult;
+        this.uppl = uppl;
+        this.godn = godn;
+        this.cnrl = cnrl;
+        this.cls = cls;
+        this.risk = risk;
+        this.startx = startx;
+        this.starty = starty;
+        this.endx = endx;
+        this.endy = endy;
+        this.code = code;
+        this.type = type;
     }
 }
