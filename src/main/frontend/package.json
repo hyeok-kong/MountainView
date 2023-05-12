@@ -10,11 +10,14 @@
     "axios": "^1.3.4",
     "bootstrap": "^5.2.3",
     "fontawesome-free": "^1.0.4",
+    "openai": "^3.2.1",
+    "openai-api": "^1.3.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-kakao-maps-sdk": "^1.1.8",
+    "react-responsive": "^9.0.2",
     "react-router-dom": "^6.10.0",
     "react-scripts": "^5.0.1",
     "styled-components": "^5.3.10",
@@ -45,6 +48,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.21.8",
+    "babel-loader": "^9.1.2",
     "eslint": "^5.16.0"
   }
 }

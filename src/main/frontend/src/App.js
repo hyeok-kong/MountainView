@@ -6,18 +6,20 @@ import icon from './mountainviewlogo.PNG'
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import axios from 'axios';
 import mountainImage from './mountain.jpg'; // 산 이미지를 import 합니다.
-import { Card, Button, Modal, Form, Container } from "react-bootstrap";
+import { Card, Button, Modal, Form, Container, Pagination,handleButtonClick} from "react-bootstrap";
 import '@fortawesome/fontawesome-free/css/all.css';
 import styled from 'styled-components';
 import OpenAI from 'openai-api';
 import './Chatmountain.css';
 import member from "./member_img.png";
+import { useMediaQuery } from 'react-responsive';
+
 
 
 
 function Kakao() {
   const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
-  const markers = [    {title: '한라산', position: {lat: 33.36137552429086,lng: 126.52942544970011} },    {title: '성산일출봉', position: {lat: 33.45880720408999,lng: 126.56213211127411}}  ];
+  const markers = [{ title: '한라산', position: { lat: 33.36137552429086, lng: 126.52942544970011 } }, { title: '성산일출봉', position: { lat: 33.45880720408999, lng: 126.56213211127411 } }];
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -57,7 +59,7 @@ function Kakao() {
   };
 
   return (
-    /*헤더 구성*/ 
+    /*헤더 구성*/
     <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
       <div className="logo" style={{ textAlign: 'center' }}>
         <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
@@ -97,7 +99,7 @@ function Kakao() {
         style={{ marginTop: "150px", width: "100%", height: "40em" }}
         level={3}
       >
-        {markers.map((marker, index) => ( /*여러 개의 마커 사용*/ 
+        {markers.map((marker, index) => ( /*여러 개의 마커 사용*/
           <MapMarker
             key={index}
             position={marker.position}
@@ -368,42 +370,93 @@ function Mountain_info() {
 }
 
 
+const Header = () => {
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+      <div className="logo" style={{ textAlign: 'center' }}>
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
+      </div>
+      {isMobile ? (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+          {isMenuOpen && (
+            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 function BoardList() {
-  const [board, setBoard] = useState([
-    { title: "Friedrich Wilhelm Nietzsche", content: "Weder Manu, noch Plato, noch Confucius, noch die jüdischen und christlichen Lehrer haben je an ihrem Recht zur Lüge gezweifelt", expanded: false },
-    { title: "道", content: "道可道 非常道 名可名 非常名  無名天 地之始 有名萬 物之母", expanded: false },
-    { title: "the road not taken", content: "I wandered lonely as a cloudThat floats on high o'er vales and hills,When all at once I saw a crowd,A host, of golden daffodilsBeside the lake, beneath the trees,Fluttering and dancing in the breeze.", expanded: false }
-  ]);
+  const [board, setBoard] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [userid, setUserid] = useState("");
   const [showModal, setShowModal] = useState(false);
-
-  const fetchBoardData = async () => {
-    try {
-      const response = await axios.get("/api/board");
-      setBoard(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const fetchBoardData = (page) => {
+    console.log(page)
+    axios
+      .get(`http://ec2-3-37-214-183.ap-northeast-2.compute.amazonaws.com:8080/api/posts?size=5&page=${page}`)
+      .then((response) => {
+        const newBoardData = response.data;
+        if (newBoardData && newBoardData.length > 0) { // Check if newBoardData is not undefined
+          setBoard(newBoardData);
+          setUserid("1")
+          setTotalPages(response.data.totalPages);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
-
   useEffect(() => {
-    fetchBoardData();
-  }, []);
+    fetchBoardData(currentPage);
+  }, [currentPage]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await axios.post("/api/board", { title, content });
-      setBoard([...board, response.data]); // response.data에 새로 생성된 게시글이 담겨 있음
-      setTitle("");
-      setContent("");
-      setShowModal(false);
-    } catch (error) {
-      console.error(error);
-    }
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
 
+  const handleSubmit = (event) => {
+    axios.post("http://ec2-3-37-214-183.ap-northeast-2.compute.amazonaws.com:8080/api/posts", { title, content, userid })
+      .then(response => {
+        const newBoardData = Array.isArray(response.data.content) ? response.data.content : [response.data.content];
+        setBoard([...board, ...newBoardData]);
+        setTitle("");
+        setContent("");
+        setShowModal(false);
+        fetchBoardData(); // <-- add this line to refresh the board
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
   const handleButtonClick = () => {
     setShowModal(true);
   };
@@ -414,28 +467,20 @@ function BoardList() {
     setBoard(newBoard);
   };
 
+
+ 
+
+
   return (
-    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
-      <div className="navbar" style={{ backgroundColor: '#ffffff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px' }}>
-        <div className="logo" style={{ textAlign: 'center' }}>
-          <img className="logo-img" src={icon} alt="Logo Image" style={{ width: '150px' }} />
-        </div>
-        <div className="menu" style={{ textAlign: 'center', marginTop: '50px' }}>
-          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
-          </ul>
-        </div>
-      </div>
+    <>
+      <Header />
       <Container>
         <div className="board-container" style={{ marginTop: '100px', padding: '20px' }}>
-          {board.map((post, index) => (
+          {board && board.map((post, index) => (
             <Card key={index} className="mb-3" style={{ backgroundColor: '#ffffff' }}>
               <Card.Body>
-                <Card.Title>{post.title}</Card.Title>
-                {post.content.length > 50 && !post.expanded ? (
+                <Card.Title>{post && post.title}</Card.Title>
+                {post && post.content && post.content.length > 50 && !post.expanded ? (
                   <div>
                     <Card.Text>{post.content.substring(0, 50)}...</Card.Text>
                     <Button onClick={() => handleExpandContent(index)}>Read more</Button>
@@ -448,6 +493,19 @@ function BoardList() {
               </Card.Body>
             </Card>
           ))}
+          <div className="d-flex justify-content-center">
+            <Pagination>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <Pagination.Item
+                  key={index}
+                  active={index === currentPage}
+                  onClick={() => handlePageChange(index)}
+                >
+                  {index + 1}
+                </Pagination.Item>
+              ))}
+            </Pagination>
+          </div>
           <div className="d-flex justify-content-end mb-3" style={{ marginLeft: 'auto' }}>
             <Button onClick={handleButtonClick} style={{ backgroundColor: '#008000', border: 'none', borderRadius: '10px', fontSize: '16px' }}>New Post</Button>
           </div>
@@ -484,48 +542,47 @@ function BoardList() {
           </Modal>
         </div>
       </Container>
-    </div>
+    </>
   );
 }
-
 
 function MyMountain() {
 
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [reviewlist, setData] = useState(null);
-  const [mountainname,setmountainname] = useState({});
-  const [mountainday,setmountainday] = useState({});
+  const [mountainname, setmountainname] = useState({});
+  const [mountainday, setmountainday] = useState({});
 
   const onClick = () => {
-    try{
+    try {
       axios.get("/api/posts/user/유저id");
       // setData(response.reviewlist);
-    }catch(e){
+    } catch (e) {
       console.log(e);
-      
+
     }
   };
-  
-  useEffect(()=> {
+
+  useEffect(() => {
     const name = {
-      name1:'한라산',
-      name2:'설악산',
-      name3:'지리산',
-      name4:'북한산'
+      name1: '한라산',
+      name2: '설악산',
+      name3: '지리산',
+      name4: '북한산'
     };
     setmountainname(name);
-  },[]);
+  }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     const date = {
-      date1:'2023.03.01',
-      date2:'2023.03.08',
-      date3:'2023.03.15',
-      date4:'2023.03.22'
+      date1: '2023.03.01',
+      date2: '2023.03.08',
+      date3: '2023.03.15',
+      date4: '2023.03.22'
     };
     setmountainday(date);
-  },[]);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -539,6 +596,8 @@ function MyMountain() {
     handleResize();
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+
 
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -565,6 +624,7 @@ function MyMountain() {
             </div>
           )}
         </>
+
       ) : (
         <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
           <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
@@ -576,221 +636,342 @@ function MyMountain() {
         </div>
       )}
 
-    <div className="Mountainlist">
-      <div className="wrap">
-        <div className="header"></div>
-        <div className="wrap-inner">
-          {/*상단 내정보 영역*/}
-          <div className="member-wrap inner">
-            <div className="member-img">
-              <img src={member} alt="member_img" />
-            </div>
-            <p className="member-name">이용자</p>
-            <p className="member-level">
-              평점 <span>99.99</span>
-            </p>
-          </div>
-          {/*하단 콘텐츠 영역*/}
-          <div className="content-wrap inner">
-            {/*정복한 산 목록*/}
-            <div className="mountain">
-              <p className="content-title">
-                <span>정복한 산 목록</span>
+      <div className="Mountainlist">
+        <div className="wrap">
+          <div className="header"></div>
+          <div className="wrap-inner">
+            {/*상단 내정보 영역*/}
+            <div className="member-wrap inner">
+              <div className="member-img">
+                <img src={member} alt="member_img" />
+              </div>
+              <p className="member-name">이용자</p>
+              <p className="member-level">
+                평점 <span>99.99</span>
               </p>
-              <table className="list-table">
-                <tr>
-                  <td className="list-data">
-                    <p>{mountainname.name1}</p>
-                  </td>
-                  <td className="list-date">{mountainday.date1}</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>{mountainname.name2}</p>
-                  </td>
-                  <td className="list-date">{mountainday.date2}</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>{mountainname.name3}</p>
-                  </td>
-                  <td className="list-date">{mountainday.date3}</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>{mountainname.name4}</p>
-                  </td>
-                  <td className="list-date">{mountainday.date4}</td>
-                </tr>
-              </table>
             </div>
-            {/*작성한 리뷰*/}
-            <div className="review">
-              <p className="content-title">
-                <span>작성한 리뷰</span>
-                <a className="more-btn" href="#none">
-                  View more
-                </a>
-              </p>
-              <table className="list-table">
-                <tr>
-                  <td className="list-data">
-                    <p>
-                      생에 첫 한라산 등반! 너무 힘들었지만 끝까지 포기하지않았다
-                    </p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>
-                      친구들과 설악산 등반을 완료했다
-                    </p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>처음 등산을 시작할땐 산중턱까지도 가기 힘들었지만 결국 해냈다.</p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>등산을 셀프 고문이라고 생각했는데 뿌듯하고 즐거웠다</p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-                <tr>
-                  <td className="list-data">
-                    <p>기분이 좋았다</p>
-                  </td>
-                  <td className="list-date">2022.04.13</td>
-                </tr>
-              </table>
+            {/*하단 콘텐츠 영역*/}
+            <div className="content-wrap inner">
+              {/*정복한 산 목록*/}
+              <div className="mountain">
+                <p className="content-title">
+                  <span>정복한 산 목록</span>
+                </p>
+                <table className="list-table">
+                  <tr>
+                    <td className="list-data">
+                      <p>{mountainname.name1}</p>
+                    </td>
+                    <td className="list-date">{mountainday.date1}</td>
+                  </tr>
+                  <tr>
+                    <td className="list-data">
+                      <p>{mountainname.name2}</p>
+                    </td>
+                    <td className="list-date">{mountainday.date2}</td>
+                  </tr>
+                  <tr>
+                    <td className="list-data">
+                      <p>{mountainname.name3}</p>
+                    </td>
+                    <td className="list-date">{mountainday.date3}</td>
+                  </tr>
+                  <tr>
+                    <td className="list-data">
+                      <p>{mountainname.name4}</p>
+                    </td>
+                    <td className="list-date">{mountainday.date4}</td>
+                  </tr>
+                </table>
+              </div>
+              {/*작성한 리뷰*/}
+              <div className="review">
+                <p className="content-title">
+                  <span>작성한 리뷰</span>
+                  <a className="more-btn" href="#none">
+                    View more
+                  </a>
+                </p>
+                <table className="list-table">
+                  <tr>
+                    <td className="list-data">
+                      <p>
+                        생에 첫 한라산 등반! 너무 힘들었지만 끝까지 포기하지않았다
+                      </p>
+                    </td>
+                    <td className="list-date">2022.04.13</td>
+                  </tr>
+                  <tr>
+                    <td className="list-data">
+                      <p>
+                        친구들과 설악산 등반을 완료했다
+                      </p>
+                    </td>
+                    <td className="list-date">2022.04.13</td>
+                  </tr>
+                  <tr>
+                    <td className="list-data">
+                      <p>처음 등산을 시작할땐 산중턱까지도 가기 힘들었지만 결국 해냈다.</p>
+                    </td>
+                    <td className="list-date">2022.04.13</td>
+                  </tr>
+                  <tr>
+                    <td className="list-data">
+                      <p>등산을 셀프 고문이라고 생각했는데 뿌듯하고 즐거웠다</p>
+                    </td>
+                    <td className="list-date">2022.04.13</td>
+                  </tr>
+                  <tr>
+                    <td className="list-data">
+                      <p>기분이 좋았다</p>
+                    </td>
+                    <td className="list-date">2022.04.13</td>
+                  </tr>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div> 
-  </div>
+    </div>
   );
 }
 
+
 const Wrapper = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 50px 30px;
-  text-align: center;
-  background-color: #6CAFB7;
-  background-image: linear-gradient(315deg, #6CAFB7 0%, #7AA1D2 74%);
-  border: 2px solid #4D4D4D;
-  border-radius: 30px;
-  box-shadow: 5px 5px 10px #4D4D4D;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  grid-template-rows: 1fr;
+  gap: 50px;
+  margin: 150px auto;
+  max-width: 1000px;
+  padding: 50px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+`;
+
+const Divider = styled.div`
+  height: 100%;
+  border-left: 1px solid #ccc;
 `;
 
 const Title = styled.h1`
-  font-size: 5rem;
-  margin-bottom: 80px;
-  color: #FFF;
-  text-shadow: 3px 3px #4D4D4D;
+  font-size: 36px;
+  margin-bottom: 50px;
+  text-align: center;
+  color: #333;
+  font-weight: bold;
+
+
 `;
 
 const UserInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 80px;
-  background-color: #FFF;
-  border: 2px solid #4D4D4D;
-  border-radius: 30px;
-  box-shadow: 5px 5px 10px #4D4D4D;
-  padding: 30px;
+  margin-top: 50px;
+  font-weight: bold;
+
 `;
 
 const UserInfoTitle = styled.h2`
-  font-size: 4rem;
-  margin-bottom: 40px;
-  color: #4D4D4D;
-  text-shadow: 2px 2px #FFF;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: bold;
+  
 `;
 
 const UserInfo = styled.p`
-  font-size: 3rem;
-  margin-bottom: 20px;
-  color: #4D4D4D;
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #666;
+  font-weight: bold;
+
 `;
 
 const LinkWrapper = styled.div`
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: 60px;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 50px;
+  font-weight: bold;
+
 `;
 
-const ReviewIcon = styled(Link)`
-  font-size: 4rem;
-  color: #FFF;
-  text-shadow: 2px 2px #4D4D4D;
-  border: 2px solid #FFF;
-  padding: 40px;
+const ReviewIcon = styled.a`
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #333;
+  font-size: 20px;
+  text-align: center;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+  font-weight: bold;
+
+`;
+
+const EditButton = styled.button`
+  background-color: #8fbc8f;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  &:hover {
+    background-color: #90ee90;
+    cursor: pointer;
+  }
+  font-weight: bold;
+
+`;
+
+const AvatarWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 50px;
+  font-weight: bold;
+
+`;
+
+const AvatarTitle = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: bold;
+
+`;
+
+const Avatar = styled.img`
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    color: #4D4D4D;
-    text-shadow: 2px 2px #FFF;
-    background-color: #FFF;
-    transform: scale(1.2);
-  }
 `;
 
-const RecommendLink = styled.a`
-  font-size: 4rem;
-  color: #FFF;
-  text-shadow: 2px 2px #4D4D4D;
-  background-color: #4D4D4D;
-  padding: 40px 60px;
-  border-radius: 30px;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    color: #4D4D4D;
-    text-shadow: 2px 2px #FFF;
-    background-color: #FFF;
-    transform: scale(1.2);
-  }
-`;
 function Mypage() {
   const [userInfo, setUserInfo] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const user = {
       name: '홍길동',
       email: 'hong@example.com',
       phone: '010-1234-5678',
+      avatar: 'https://placehold.it/200x200',
     };
     setUserInfo(user);
   }, []);
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserInfo((prevUserInfo) => ({
+      ...prevUserInfo,
+      [name]: value,
+    }));
+  };
 
   return (
-    <Wrapper>
-      <Title>Mountainview
-        userpage!</Title>
-      <UserInfoWrapper>
-        <UserInfoTitle>회원 정보</UserInfoTitle>
-        <UserInfo>이름: {userInfo.name}</UserInfo>
-        <UserInfo>이메일: {userInfo.email}</UserInfo>
-        <UserInfo>전화번호: {userInfo.phone}</UserInfo>
-      </UserInfoWrapper>
-      <LinkWrapper>
-        <ReviewIcon to="/boardList">리뷰 게시판으로 이동</ReviewIcon>
-        <ReviewIcon to="/chatmountain">다음 등산 코스 추천</ReviewIcon>
-      </LinkWrapper>
-    </Wrapper>
+    <>
+      <Header />
+      <Wrapper>
+        <Title>마이페이지</Title>
+        <UserInfoWrapper>
+          <UserInfoTitle>회원 정보</UserInfoTitle>
+          {isEditing ? (
+            <>
+              <UserInfo>
+                <label htmlFor="name">이름:</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={userInfo.name}
+                  onChange={handleChange}
+                />
+              </UserInfo>
+              <UserInfo>
+                <label htmlFor="email">이메일:</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={userInfo.email}
+                  onChange={handleChange}
+                />
+              </UserInfo>
+              <UserInfo>
+                <label htmlFor="phone">전화번호:</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={userInfo.phone}
+                  onChange={handleChange}
+                />
+              </UserInfo>
+              <EditButton onClick={handleSave}>저장</EditButton>
+              <EditButton onClick={handleCancel}>취소</EditButton>
+            </>
+          ) : (
+            <>
+              <UserInfo>
+                <label>이름:</label>
+                <span>{userInfo.name}</span>
+              </UserInfo>
+              <UserInfo>
+                <label>이메일:</label>
+                <span>{userInfo.email}</span>
+              </UserInfo>
+              <UserInfo>
+                <label>전화번호:</label>
+                <span>{userInfo.phone}</span>
+              </UserInfo>
+              <EditButton onClick={handleEdit}>수정</EditButton>
+            </>
+          )}
+        </UserInfoWrapper>
+        <Divider />
+        <LinkWrapper>
+          <UserInfoTitle>링크</UserInfoTitle>
+          <ReviewIcon href="/boardList">리뷰 게시판</ReviewIcon>
+          <ReviewIcon href="/chatmountain">ChatMountain</ReviewIcon>
+        </LinkWrapper>
+        <Divider />
+        <AvatarWrapper>
+          <AvatarTitle>프로필 사진</AvatarTitle>
+          <Avatar src={userInfo.avatar} alt="프로필 사진" />
+        </AvatarWrapper>
+      </Wrapper>
+    </>
   );
 }
 
 const openai = require('openai-api');
+
+
+
 const openaiInstance = new OpenAI('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');
 const Chatmountain = () => {
   const [question, setQuestion] = useState('');
