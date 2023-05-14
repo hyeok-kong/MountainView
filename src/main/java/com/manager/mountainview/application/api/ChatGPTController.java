@@ -17,7 +17,7 @@ public class ChatGPTController {
 
     private final ChatgptService chatgptService;
 
-    @GetMapping("/chatgptapi")
+    @GetMapping("/api/chat")
     public String aiResponse(@RequestBody String request) {
         return chatgptService.multiChat(Arrays.asList(new MultiChatMessage("user", request)));
     }
