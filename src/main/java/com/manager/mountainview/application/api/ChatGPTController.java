@@ -6,6 +6,7 @@ import io.github.flashvayne.chatgpt.service.ChatgptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,7 @@ public class ChatGPTController {
 
     private final ChatgptService chatgptService;
 
-    @GetMapping("/api/chat")
+    @PostMapping("/api/chat")
     public String aiResponse(@RequestBody String request) {
         return chatgptService.multiChat(Arrays.asList(new MultiChatMessage("user", request)));
     }
