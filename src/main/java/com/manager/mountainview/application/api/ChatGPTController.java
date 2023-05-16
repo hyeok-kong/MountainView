@@ -20,18 +20,7 @@ public class ChatGPTController {
     private final ChatgptService chatgptService;
 
     @PostMapping("/api/chat")
-    public JSONObject aiResponse(@RequestBody String request) {
-        String response = chatgptService.multiChat(Arrays.asList(new MultiChatMessage("user", request)));
-        JSONObject result = new JSONObject();
-
-        JSONParser parser = new JSONParser();
-        try {
-            result = (JSONObject) parser.parse(response);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+    public String aiResponse(@RequestBody String request) {
+        return chatgptService.multiChat(Arrays.asList(new MultiChatMessage("user", request)));
     }
 }
