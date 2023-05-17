@@ -6,7 +6,7 @@ import icon from './mountainviewlogo.PNG'
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import axios from 'axios';
 import mountainImage from './mountain.jpg'; // 산 이미지를 import 합니다.
-import { Card, Button, Modal, Form, Container, Pagination,handleButtonClick} from "react-bootstrap";
+import { Card, Button, Modal, Form, Container, Pagination, handleButtonClick } from "react-bootstrap";
 import '@fortawesome/fontawesome-free/css/all.css';
 import styled from 'styled-components';
 import OpenAI from 'openai-api';
@@ -14,65 +14,117 @@ import './Chatmountain.css';
 import member from "./member_img.png";
 import { useMediaQuery } from 'react-responsive';
 
-
-
-
 function Kakao() {
-  const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
-  const markers = [{ title: '한라산', position: { lat: 33.36137552429086, lng: 126.52942544970011 } }, { title: '성산일출봉', position: { lat: 33.45880720408999, lng: 126.56213211127411 } }];
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState(null);
+  
+  const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
+  const [markers, setMarkers] = useState([]);
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          setCurrentLocation({ lat, lng });
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsMobile(true);
-      } else {
-        setIsMobile(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
+  //햄버거 버튼 클릭 시 수행 함수
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleMarkerClick = (code) => {
+    setMarkerIndex(codeList.indexOf(code));
+  };
+
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const handleResize = () => {
+    if (window.innerWidth <= 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+      setIsMenuOpen(false);
+    }
+  };
+  window.addEventListener('resize', handleResize);
+
+  const [showMenu, setShowMenu] = useState(false);
+
+  const handleToggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
+
+  const [id,setId] = useState("");
+  const [code,setCode] = useState("");
+  const [name,setName] = useState("");
+  const [location,setLocation] = useState([]);
+  const [codeList,setCodeList] = useState([]);
+  const [newMarkers,setNewMarkers] = useState([]);
+
+  const [currentLocation, setCurrentLocation] = useState(null);
+   //현재 위치 가져오기 
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition( (position) => {
+        setCurrentLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (error) => console.error(error)
+    );
+  }
+
+
+  useEffect(() => {
+    const getData = () => {
+      axios.get("http://ec2-3-37-214-183.ap-northeast-2.compute.amazonaws.com:8080/api/mountain")
+      .then(response => {
+        const data = response.data; //json파일을 가져와 data 변수에 저장
+        if (!data) return;
+        const codes = data.map((mountain) => mountain.code); // code 값을 따로 배열에 저장
+        setCodeList(codes);
+        
+        const newMarkers = codes.map((code) => {
+          const mountain = data.find((m) => m.code === code); // code값으로 해당 mountain 객체를 찾음
+          if (!mountain || !mountain.location || !mountain.code || !mountain.name) return null; // mountain 객체를 찾지 못하거나 location 속성이 없는 경우 다음 코드로 넘어감
+
+          return {
+            id: mountain.id,
+            code: mountain.code,
+            name: mountain.name,
+            location: { 
+              x: mountain.location.y, 
+              y: mountain.location.x
+            }
+          };
+        }).filter(Boolean);
+        
+        
+        setMarkers(newMarkers);
+        
+      }) 
+    .catch (error =>  {
+      console.error(error);
+    });
+    };
+    getData();
+  }, []);
+  console.log(markers);
+  
+  
   return (
-    /*헤더 구성*/
+    /*헤더 구성*/ 
     <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
       <div className="logo" style={{ textAlign: 'center' }}>
         <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
       </div>
       {isMobile ? (
         <>
-          <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
-          </div>
+          <nav className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer'}} onClick={handleMenuClick}></i>
+          </nav>
           {isMenuOpen && (
-            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', left: '0', height: '100vh', width: '250px', zIndex: '999', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)' }}>
+            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', right: '0', height: '100vh', width: '250px', zIndex: '999',  boxShadow: '0px 0px 10px rgba(0,0,0,0.2)', transition: 'all 0.3s ease-in-out'}}>
+              <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', border: '0px' }} onClick={handleMenuClick}>X</button>
               <ul style={{ listStyle: 'none', padding: '0' }}>
-                <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Home</a></li>
+                <li style={{ display: 'block', marginTop: '40px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Home</a></li>
                 <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Login</a></li>
                 <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Services</a></li>
                 <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Mountain</a></li>
@@ -99,14 +151,15 @@ function Kakao() {
         style={{ marginTop: "150px", width: "100%", height: "40em" }}
         level={3}
       >
-        {markers.map((marker, index) => ( /*여러 개의 마커 사용*/
+        {markers.map((marker,index) => (
           <MapMarker
-            key={index}
-            position={marker.position}
-            clickable={true}
-            onClick={() => setMarkerIndex(index)}
-            title={marker.title}
+            key={index} // 각 마커를 식별하는데 사용
+            position={{lat:marker.location.x, lng:marker.location.y}}
+            clickable={true} // 마커를 클릭할 수 있는지 여부 결정
+            onClick={() => handleMarkerClick(marker.code)} // 마커 클릭 시 실행할 함수
+            title={marker.name} // 마커에 표시될 이름
           >
+            {/* 마커를 클릭하면 마커 정보를 보여주는 모달창 */}
             {markerIndex === index && (
               <div style={{ minWidth: "150px" }}>
                 <img
@@ -122,24 +175,23 @@ function Kakao() {
                   }}
                   onClick={() => setMarkerIndex(-1)}
                 />
-                {/* 인포윈도우 리스트 */}
                 <div style={{ padding: "5px", color: "#000" }}>
-                  {marker.title} <br />
+                  <span style={{ fontWeight: "bold" }}>{marker.name}</span> <br />
                   <a
                     href="/Mountain_info"
-                    style={{ color: "blue" }}
+                    style={{ color: "blue", textDecoration: "underline", marginRight: "10px" }}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    산 정보
-                  </a>{" "}
+                    information
+                  </a>
                   <a
                     href="/BoardList"
-                    style={{ color: "blue" }}
+                    style={{ color: "blue", textDecoration: "underline" }}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    게시판
+                    noticeboard
                   </a>
                 </div>
               </div>
@@ -150,6 +202,8 @@ function Kakao() {
     </div>
   );
 }
+
+
 
 function Home() {
   const [isMobile, setIsMobile] = useState(false);
@@ -468,7 +522,7 @@ function BoardList() {
   };
 
 
- 
+
 
 
   return (
@@ -984,21 +1038,23 @@ const Chatmountain = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('/chatgptapi', {
+      const response = await fetch(`http://ec2-3-37-214-183.ap-northeast-2.compute.amazonaws.com:8080/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          question: question,
+          question: encodeURIComponent(question),
         }),
       });
+
       const data = await response.json();
-      setAnswer(data.answer);
+      setAnswer(data.response);
     } catch (error) {
       console.error(error);
     }
   };
+
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -1026,6 +1082,8 @@ const Chatmountain = () => {
     const chatmountain = document.querySelector('.chat-container');
     chatmountain.style.display = isMenuOpen ? 'block' : 'none';
   };
+
+
 
 
   return (
