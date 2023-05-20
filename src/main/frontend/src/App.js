@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './App.css'; // Import the CSS file
 import icon from './mountainviewlogo.PNG'
+import { FaHome, FaUser, FaTasks, FaMountain } from 'react-icons/fa';
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import axios from 'axios';
 import mountainImage from './mountain.jpg'; // 산 이미지를 import 합니다.
@@ -20,6 +21,8 @@ function Kakao() {
   
   const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
   const [markers, setMarkers] = useState([]);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   //햄버거 버튼 클릭 시 수행 함수
   const handleMenuClick = () => {
@@ -121,13 +124,31 @@ function Kakao() {
             <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer'}} onClick={handleMenuClick}></i>
           </nav>
           {isMenuOpen && (
-            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', right: '0', height: '100vh', width: '250px', zIndex: '999',  boxShadow: '0px 0px 10px rgba(0,0,0,0.2)', transition: 'all 0.3s ease-in-out'}}>
-              <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', border: '0px' }} onClick={handleMenuClick}>X</button>
+            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', right: '0', height: '100vh', width: '250px', zIndex: '999', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)', transition: 'all 0.3s ease-in-out' }}>
+              <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', border: '0px' }} onClick={handleMenuClick}>
+                {isOpen ? <i className="fas fa-bars"></i> : <i className="fas fa-times"></i>}
+              </button>
               <ul style={{ listStyle: 'none', padding: '0' }}>
-                <li style={{ display: 'block', marginTop: '40px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Home</a></li>
-                <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Login</a></li>
-                <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Services</a></li>
-                <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>Mountain</a></li>
+                <li style={{ display: 'block', marginTop: '40px' }}>
+                  <a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaHome style={{ marginRight: '5px' }} /> Home
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaUser style={{ marginRight: '5px' }} /> Login
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaTasks style={{ marginRight: '5px' }} /> Services
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/MyMountain" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaMountain style={{ marginRight: '5px' }} /> Mountain
+                  </a>
+                </li>
               </ul>
             </div>
           )}
