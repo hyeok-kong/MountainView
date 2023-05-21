@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './App.css'; // Import the CSS file
 import icon from './mountainviewlogo.PNG'
+import loginpage from './loginpage.jpg'
 import { FaHome, FaUser, FaTasks, FaMountain } from 'react-icons/fa';
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import axios from 'axios';
@@ -14,6 +15,49 @@ import OpenAI from 'openai-api';
 import './Chatmountain.css';
 import member from "./member_img.png";
 import { useMediaQuery } from 'react-responsive';
+import boardback from './boardback.jpg';
+
+
+
+const Header = () => {
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+      <div className="logo" style={{ textAlign: 'center' }}>
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
+      </div>
+      {isMobile ? (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+          {isMenuOpen && (
+            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'white' }}>Home</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'white' }}>Login</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'white' }}>Services</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'white' }}>Mountain</a></li>
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'white' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'white' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'white' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'white' }}>Mountain</a></li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
 
 function Kakao() {
   const [isMobile, setIsMobile] = useState(false);
@@ -288,15 +332,14 @@ function LoginContainer() {
   const [isLoginSuccess, setIsLoginSuccess] = useState(false);
 
   return <Login isLoginSuccess={isLoginSuccess} setIsLoginSuccess={setIsLoginSuccess} />;
-}
-
-const Login = ({ isLoginSuccess, setIsLoginSuccess }) => {
+}const Login = ({ isLoginSuccess, setIsLoginSuccess }) => {
   const REST_API_KEY = '65d7d41f6c724b09645939d238c0b75f'; // 카카오 개발자 사이트에서 발급받은 REST API KEY
   const REDIRECT_URI = 'http://localhost:3000/login'; // 카카오 개발자 사이트에서 등록한 Redirect URI
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
   const handleLogin = () => {
-    axios.get('/auth/kakao')
+    axios
+      .get('/auth/kakao')
       .then(res => {
         console.log(res.data);
         setIsLoginSuccess(true); // 로그인 성공 시 상태 변수를 true로 변경
@@ -304,37 +347,68 @@ const Login = ({ isLoginSuccess, setIsLoginSuccess }) => {
       .catch(err => {
         console.log(err);
         setIsLoginSuccess(false); // 로그인 실패 시 상태 변수를 false로 변경
-      })
-  }
+      });
+  };
 
   return (
-    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
-      <div className="logo" style={{ textAlign: 'center' }}>
-        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: '150px' }} />
-      </div>
-      <div className="menu" style={{ textAlign: 'center', marginTop: '50px' }}>
-        <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-          <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-          <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
-        </ul>
-      </div>
+    <div
+      className="home-page"
+      style={{
+        position: 'relative',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundImage: `url(${loginpage})`,
+        backgroundSize: 'cover',
+      }}
+    >
+      <Header/>
+
+      
       <div>
-        {isLoginSuccess ? ( // 로그인 성공 시 나타날 화면
-          <h1 style={{ marginTop: '150px', flex: 1, textAlign: 'center' }}>
+        {isLoginSuccess ? (
+          // 로그인 성공 시 나타날 화면
+          <h1 style={{ marginTop: '150px', flex: 1, textAlign: 'center', color: 'white', fontFamily: 'cursive', fontSize: '48px' }}>
             로그인이 완료되었습니다.
           </h1>
-        ) : ( // 로그인 실패 시 나타날 화면
-          <h1 center={{ lat: 37.5665, lng: 126.9780 }} style={{ marginTop: '150px', flex: 1, textAlign: 'center' }}>
-            <a href={KAKAO_AUTH_URL} onClick={handleLogin}>Kakao Login</a>
-          </h1>
+        ) : (
+          // 로그인 실패 시 나타날 화면
+          <div style={{ marginTop: '50px', flex: 1, textAlign: 'left' }}>
+            <p style={{ color: 'white', marginTop: '10px', fontFamily: 'cursive', fontSize: '20px' }}>
+              Hi anonymous.
+            </p>
+            <p style={{ color: 'white', marginTop: '10px', fontFamily: 'cursive', fontSize: '20px' }}>
+               we got much tips and funny things about mountain
+            </p>
+            <p style={{ color: 'white', fontFamily: 'cursive', fontSize: '20px', marginTop: '10px' }}>
+              If you wanna more tips? let's go Kakao Login
+            </p>
+            <a
+              href={KAKAO_AUTH_URL}
+              onClick={handleLogin}
+              style={{
+                color: 'white',
+                background: 'none',
+                border: 'none',
+                fontSize: '30px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                fontFamily: 'cursive',
+                textDecoration: 'underline',
+                marginTop: '20px',
+              }}
+            >
+              Kakao Login
+            </a>
+            
+          </div>
         )}
       </div>
     </div>
-  )
+  );
 };
-
 
 
 
@@ -445,44 +519,6 @@ function Mountain_info() {
 }
 
 
-const Header = () => {
-  const isMobile = useMediaQuery({ maxWidth: 767 });
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const handleMenuClick = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  return (
-    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
-      <div className="logo" style={{ textAlign: 'center' }}>
-        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
-      </div>
-      {isMobile ? (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
-          {isMenuOpen && (
-            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
-            </ul>
-          )}
-        </div>
-      ) : (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-};
 
 
 function BoardList() {
@@ -548,8 +584,23 @@ function BoardList() {
 
   return (
     <>
+    <div
+      className="home-page"
+      style={{
+        position: 'relative',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundImage: `url(${boardback})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}
+    >
       <Header />
-      <Container>
+      <Container style={{ flex: '1' }}>
         <div className="board-container" style={{ marginTop: '100px', padding: '20px' }}>
           {board && board.map((post, index) => (
             <Card key={index} className="mb-3" style={{ backgroundColor: '#ffffff' }}>
@@ -617,6 +668,8 @@ function BoardList() {
           </Modal>
         </div>
       </Container>
+    </div>
+
     </>
   );
 }
@@ -959,7 +1012,7 @@ function Mypage() {
 
   useEffect(() => {
     const user = {
-      name: '홍길동',
+      name: 'auspicious',
       email: 'hong@example.com',
       phone: '010-1234-5678',
       avatar: 'https://placehold.it/200x200',
@@ -987,16 +1040,18 @@ function Mypage() {
   };
 
   return (
+    
+
     <>
       <Header />
       <Wrapper>
-        <Title>마이페이지</Title>
+        <Title>EditUserProfile</Title>
         <UserInfoWrapper>
-          <UserInfoTitle>회원 정보</UserInfoTitle>
+          <UserInfoTitle>UserProfile</UserInfoTitle>
           {isEditing ? (
             <>
               <UserInfo>
-                <label htmlFor="name">이름:</label>
+                <label htmlFor="name">name:</label>
                 <input
                   type="text"
                   id="name"
@@ -1006,7 +1061,7 @@ function Mypage() {
                 />
               </UserInfo>
               <UserInfo>
-                <label htmlFor="email">이메일:</label>
+                <label htmlFor="email">e-mail:</label>
                 <input
                   type="email"
                   id="email"
@@ -1016,7 +1071,7 @@ function Mypage() {
                 />
               </UserInfo>
               <UserInfo>
-                <label htmlFor="phone">전화번호:</label>
+                <label htmlFor="phone">phonenumber:</label>
                 <input
                   type="tel"
                   id="phone"
@@ -1025,36 +1080,36 @@ function Mypage() {
                   onChange={handleChange}
                 />
               </UserInfo>
-              <EditButton onClick={handleSave}>저장</EditButton>
-              <EditButton onClick={handleCancel}>취소</EditButton>
+              <EditButton onClick={handleSave}>save</EditButton>
+              <EditButton onClick={handleCancel}>cancel</EditButton>
             </>
           ) : (
             <>
               <UserInfo>
-                <label>이름:</label>
+                <label>name:</label>
                 <span>{userInfo.name}</span>
               </UserInfo>
               <UserInfo>
-                <label>이메일:</label>
+                <label>e-mail:</label>
                 <span>{userInfo.email}</span>
               </UserInfo>
               <UserInfo>
-                <label>전화번호:</label>
+                <label>phonenumber:</label>
                 <span>{userInfo.phone}</span>
               </UserInfo>
-              <EditButton onClick={handleEdit}>수정</EditButton>
+              <EditButton onClick={handleEdit}>Edit</EditButton>
             </>
           )}
         </UserInfoWrapper>
         <Divider />
         <LinkWrapper>
-          <UserInfoTitle>링크</UserInfoTitle>
-          <ReviewIcon href="/boardList">리뷰 게시판</ReviewIcon>
+          <UserInfoTitle>another</UserInfoTitle>
+          <ReviewIcon href="/boardList">review board</ReviewIcon>
           <ReviewIcon href="/chatmountain">ChatMountain</ReviewIcon>
         </LinkWrapper>
         <Divider />
         <AvatarWrapper>
-          <AvatarTitle>프로필 사진</AvatarTitle>
+          <AvatarTitle>profile picture</AvatarTitle>
           <Avatar src={userInfo.avatar} alt="프로필 사진" />
         </AvatarWrapper>
       </Wrapper>
