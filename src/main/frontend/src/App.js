@@ -7,7 +7,10 @@ import loginpage from './loginpage.jpg'
 import { FaHome, FaUser, FaTasks, FaMountain } from 'react-icons/fa';
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import axios from 'axios';
-import mountainImage from './mountain.jpg'; // 산 이미지를 import 합니다.
+import Homeimage from './Home.jpg'; // Home 이미지
+import mountain from './mountain.png'; // Kakao Map 이미지
+import Mountaininfoimage from './Mountaininfo.jpg'; //Mountain_info 이미지
+import Mypageimage from './Mypage.jpg'; //Mypage 이미지
 import { Card, Button, Modal, Form, Container, Pagination, handleButtonClick } from "react-bootstrap";
 import '@fortawesome/fontawesome-free/css/all.css';
 import styled from 'styled-components';
@@ -22,6 +25,7 @@ import boardback from './boardback.jpg';
 const Header = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -33,24 +37,47 @@ const Header = () => {
         <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
       </div>
       {isMobile ? (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+        <>
+          <nav className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer'}} onClick={handleMenuClick}></i>
+          </nav>
           {isMenuOpen && (
-            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'white' }}>Home</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'white' }}>Login</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'white' }}>Services</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'white' }}>Mountain</a></li>
-            </ul>
+            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', right: '0', height: '100vh', width: '250px', zIndex: '999', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)', transition: 'all 0.3s ease-in-out' }}>
+              <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', border: '0px' }} onClick={handleMenuClick}>
+                {isOpen ? <i className="fas fa-bars"></i> : <i className="fas fa-times"></i>}
+              </button>
+              <ul style={{ listStyle: 'none', padding: '0' }}>
+                <li style={{ display: 'block', marginTop: '40px' }}>
+                  <a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaHome style={{ marginRight: '5px' }} /> Home
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaUser style={{ marginRight: '5px' }} /> Login
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaTasks style={{ marginRight: '5px' }} /> Services
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/Mypage" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaMountain style={{ marginRight: '5px' }} /> Mypage
+                  </a>
+                </li>
+              </ul>
+            </div>
           )}
-        </div>
+        </>
       ) : (
         <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
           <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'white' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'white' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'white' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'white' }}>Mountain</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mypage</a></li>
           </ul>
         </div>
       )}
@@ -59,14 +86,17 @@ const Header = () => {
 };
 
 
+
 function Kakao() {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
   const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
   const [markers, setMarkers] = useState([]);
-
   const [isOpen, setIsOpen] = useState(false);
+  const [codeList,setCodeList] = useState([]);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [mapHeight, setMapHeight] = useState('42em');
 
   //햄버거 버튼 클릭 시 수행 함수
   const handleMenuClick = () => {
@@ -75,11 +105,6 @@ function Kakao() {
 
   const handleMarkerClick = (code) => {
     setMarkerIndex(codeList.indexOf(code));
-  };
-
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
   };
 
   const handleResize = () => {
@@ -94,17 +119,6 @@ function Kakao() {
 
   const [showMenu, setShowMenu] = useState(false);
 
-  const handleToggleMenu = () => {
-    setShowMenu(!showMenu);
-  };
-
-  const [id,setId] = useState("");
-  const [code,setCode] = useState("");
-  const [name,setName] = useState("");
-  const [location,setLocation] = useState([]);
-  const [codeList,setCodeList] = useState([]);
-  const [newMarkers,setNewMarkers] = useState([]);
-
   const [currentLocation, setCurrentLocation] = useState(null);
    //현재 위치 가져오기 
   if (navigator.geolocation) {
@@ -117,6 +131,18 @@ function Kakao() {
       (error) => console.error(error)
     );
   }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
 
   useEffect(() => {
@@ -158,112 +184,69 @@ function Kakao() {
   
   return (
     /*헤더 구성*/ 
-    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
-      <div className="logo" style={{ textAlign: 'center' }}>
-        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
-      </div>
-      {isMobile ? (
-        <>
-          <nav className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer'}} onClick={handleMenuClick}></i>
-          </nav>
-          {isMenuOpen && (
-            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', right: '0', height: '100vh', width: '250px', zIndex: '999', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)', transition: 'all 0.3s ease-in-out' }}>
-              <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', border: '0px' }} onClick={handleMenuClick}>
-                {isOpen ? <i className="fas fa-bars"></i> : <i className="fas fa-times"></i>}
-              </button>
-              <ul style={{ listStyle: 'none', padding: '0' }}>
-                <li style={{ display: 'block', marginTop: '40px' }}>
-                  <a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
-                    <FaHome style={{ marginRight: '5px' }} /> Home
-                  </a>
-                </li>
-                <li style={{ display: 'block', marginTop: '20px' }}>
-                  <a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
-                    <FaUser style={{ marginRight: '5px' }} /> Login
-                  </a>
-                </li>
-                <li style={{ display: 'block', marginTop: '20px' }}>
-                  <a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
-                    <FaTasks style={{ marginRight: '5px' }} /> Services
-                  </a>
-                </li>
-                <li style={{ display: 'block', marginTop: '20px' }}>
-                  <a href="/MyMountain" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
-                    <FaMountain style={{ marginRight: '5px' }} /> Mountain
-                  </a>
-                </li>
-              </ul>
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
-          </ul>
-        </div>
-      )}
-      <Map
-        center={
-          currentLocation
-            ? { lat: currentLocation.lat, lng: currentLocation.lng }
-            : { lat: 33.36137552429086, lng: 126.52942544970011 }
-        }
-        style={{ marginTop: "150px", width: "100%", height: "40em" }}
-        level={3}
-      >
-        {markers.map((marker,index) => (
-          <MapMarker
-            key={index} // 각 마커를 식별하는데 사용
-            position={{lat:marker.location.x, lng:marker.location.y}}
-            clickable={true} // 마커를 클릭할 수 있는지 여부 결정
-            onClick={() => handleMarkerClick(marker.code)} // 마커 클릭 시 실행할 함수
-            title={marker.name} // 마커에 표시될 이름
-          >
-            {/* 마커를 클릭하면 마커 정보를 보여주는 모달창 */}
-            {markerIndex === index && (
-              <div style={{ minWidth: "150px" }}>
-                <img
-                  alt="close"
-                  width="14"
-                  height="13"
-                  src="https://t1.daumcdn.net/localimg/localimages/07/mapjsapi/2x/bt_close.gif"
-                  style={{
-                    position: "absolute",
-                    right: "5px",
-                    top: "5px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => setMarkerIndex(-1)}
-                />
-                <div style={{ padding: "5px", color: "#000" }}>
-                  <span style={{ fontWeight: "bold" }}>{marker.name}</span> <br />
-                  <a
-                    href="/Mountain_info"
-                    style={{ color: "blue", textDecoration: "underline", marginRight: "10px" }}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    information
-                  </a>
-                  <a
-                    href="/BoardList"
-                    style={{ color: "blue", textDecoration: "underline" }}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    noticeboard
-                  </a>
+    <div style={{ position: 'relative' }}>
+      {/* <div
+        className="background-image"
+        style={{
+          backgroundImage: `url(${mountain})`,
+          width: '100%',
+          height: '100vh',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      ></div> */}
+      <>
+      <Header />
+        <Map
+          center={
+            currentLocation
+              ? { lat: currentLocation.lat, lng: currentLocation.lng }
+              : { lat: 33.36137552429086, lng: 126.52942544970011 }
+          }
+          style={{ margin: '0 20px', marginTop: "150px", width: "calc(100% - 40px)", height: "42em", position: 'absolute', top: 0, left: 0 }}
+          level={3}
+        >
+          {markers.map((marker,index) => (
+            <MapMarker
+              key={index} // 각 마커를 식별하는데 사용
+              position={{lat:marker.location.x, lng:marker.location.y}}
+              clickable={true} // 마커를 클릭할 수 있는지 여부 결정
+              onClick={() => handleMarkerClick(marker.code)} // 마커 클릭 시 실행할 함수
+              title={marker.name} // 마커에 표시될 이름
+            >
+              {/* 마커를 클릭하면 마커 정보를 보여주는 모달창 */}
+              {markerIndex === index && (
+                <div style={{ minWidth: "150px" }}>
+                  <img
+                    alt="close"
+                    width="14"
+                    height="13"
+                    src="https://t1.daumcdn.net/localimg/localimages/07/mapjsapi/2x/bt_close.gif"
+                    style={{
+                      position: "absolute",
+                      right: "5px",
+                      top: "5px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setMarkerIndex(-1)}
+                  />
+                  <div style={{ padding: "5px", color: "#000" }}>
+                    <span style={{ fontWeight: "bold" }}>{marker.name}</span> <br />
+                    <a
+                      href="/Mountain_info"
+                      style={{ color: "blue", textDecoration: "underline", marginRight: "10px" }}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      information
+                    </a>
+                  </div>
                 </div>
-              </div>
-            )}
-          </MapMarker>
-        ))}
-      </Map>
+              )}
+            </MapMarker>
+          ))}
+        </Map>
+      </>
     </div>
   );
 }
@@ -293,10 +276,21 @@ function Home() {
 
   return (
     /*헤더 구성*/
+    <div>
+    <div
+      className="background-image"
+      style={{
+        backgroundImage: `url(${Homeimage})`,
+        width: '100%',
+        height: '100vh',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    ></div>
     <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
-      <div className="logo" style={{ textAlign: 'center' }}>
+      {/* <div className="logo" style={{ textAlign: 'center' }}>
         <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
-      </div>
+       </div> */}
       {isMobile ? (
         <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
           <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
@@ -305,25 +299,26 @@ function Home() {
               <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
               <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
               <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mypage</a></li>
             </ul>
           )}
         </div>
       ) : (
         <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
           <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Mypage</a></li>
           </ul>
         </div>
       )}
       <div className="main-text" style={{ display: 'flex', flexDirection: 'column' }}>
-        <h1 style={{ fontSize: '4rem', marginBottom: '0' }}>Let's Go</h1>
-        <h1 style={{ fontSize: '5rem', marginTop: '0' }}><span>Mountain</span></h1>
+        <h1 style={{ fontSize: '5rem', marginBottom: '0' }}>Let's Go</h1>
+        <h1 style={{ fontSize: '6rem', marginTop: '0' }}><span>Mountain</span></h1>
       </div>
     </div>
+  </div>
   );
 }
 
@@ -380,7 +375,7 @@ function LoginContainer() {
               Hi anonymous.
             </p>
             <p style={{ color: 'white', marginTop: '10px', fontFamily: 'cursive', fontSize: '20px' }}>
-               we got much tips and funny things about mountain
+              we got much tips and funny things about mountain
             </p>
             <p style={{ color: 'white', fontFamily: 'cursive', fontSize: '20px', marginTop: '10px' }}>
               If you wanna more tips? let's go Kakao Login
@@ -477,9 +472,9 @@ function Mountain_info() {
   const trailItemStyle = {
     marginBottom: "20px",
     padding: "20px",
-    backgroundColor: "white",
+    
     borderRadius: "10px",
-    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
   };
 
   const contentStyle = {
@@ -489,6 +484,10 @@ function Mountain_info() {
     backgroundColor: "#f2f22",
     borderRadius: "20px",
     boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.3)",
+    backgroundImage: `url(${Mountaininfoimage})`, /*배경 이미지 삽입*/
+    backgroundSize: 'cover',
+    backgroundPosition: 'center', 
+    color:'white' /*글씨 색 변경*/
   };
 
   return (
@@ -504,9 +503,9 @@ function Mountain_info() {
           <p>난이도: {trail.difficulty}</p>
         </div>
       ))}
-      <h2>설명</h2>
+      <h1>설명</h1>
       <p>{mountainData.description}</p>
-      <h2>교통</h2>
+      <h1>교통</h1>
       <p>{mountainData.transportation}</p>
       <button style={favoriteButtonStyle} onClick={handleFavorite}>
         {isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}
@@ -733,56 +732,8 @@ function MyMountain() {
   };
 
   return (
-    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
-      <div className="logo" style={{ textAlign: 'center' }}>
-        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
-      </div>
-      {isMobile ? (
-        <>
-          <nav className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer'}} onClick={handleMenuClick}></i>
-          </nav>
-          {isMenuOpen && (
-            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', right: '0', height: '100vh', width: '250px', zIndex: '999', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)', transition: 'all 0.3s ease-in-out' }}>
-              <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', border: '0px' }} onClick={handleMenuClick}>
-                {isOpen ? <i className="fas fa-bars"></i> : <i className="fas fa-times"></i>}
-              </button>
-              <ul style={{ listStyle: 'none', padding: '0' }}>
-                <li style={{ display: 'block', marginTop: '40px' }}>
-                  <a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
-                    <FaHome style={{ marginRight: '5px' }} /> Home
-                  </a>
-                </li>
-                <li style={{ display: 'block', marginTop: '20px' }}>
-                  <a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
-                    <FaUser style={{ marginRight: '5px' }} /> Login
-                  </a>
-                </li>
-                <li style={{ display: 'block', marginTop: '20px' }}>
-                  <a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
-                    <FaTasks style={{ marginRight: '5px' }} /> Services
-                  </a>
-                </li>
-                <li style={{ display: 'block', marginTop: '20px' }}>
-                  <a href="/MyMountain" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
-                    <FaMountain style={{ marginRight: '5px' }} /> Mountain
-                  </a>
-                </li>
-              </ul>
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
-          </ul>
-        </div>
-      )}
-
+    <>
+      <Header />
       <div className="Mountainlist">
         <div className="wrap">
           <div className="header"></div>
@@ -880,23 +831,30 @@ function MyMountain() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
 
+
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 3fr;
+display: grid;
+grid-template-columns: fr;
+grid-template-rows: auto;
+gap: 20px;
+margin: auto;
+margin-top: 180px;
+max-width: 1500px;
+padding: 50px;
+border: 1px solid #ccc;
+border-radius: 4px;
+background-color: #fff;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+
+@media (min-width: 768px) {
+  grid-template-columns: 2fr 4fr;
   grid-template-rows: 1fr;
-  gap: 50px;
-  margin: 150px auto;
-  max-width: 1000px;
-  padding: 50px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
 `;
 
 const Divider = styled.div`
@@ -905,12 +863,13 @@ const Divider = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 36px;
-  margin-bottom: 50px;
+  font-size: 34px;
+  margin-bottom: 10px;
   text-align: center;
   color: #333;
   font-weight: bold;
-
+  margin-right: 25px;
+  margin-top: 5px;
 
 `;
 
@@ -918,7 +877,7 @@ const UserInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 10px;
   font-weight: bold;
 
 `;
@@ -933,17 +892,17 @@ const UserInfoTitle = styled.h2`
 
 const UserInfo = styled.p`
   font-size: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   color: #666;
   font-weight: bold;
-
+  margin-right: 100px;
 `;
 
 const LinkWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 25px;
   font-weight: bold;
 
 `;
@@ -953,7 +912,7 @@ const ReviewIcon = styled.a`
   padding: 10px 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   text-decoration: none;
   color: #333;
   font-size: 20px;
@@ -987,7 +946,7 @@ const AvatarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 25px;
   font-weight: bold;
 
 `;
@@ -1039,13 +998,26 @@ function Mypage() {
     }));
   };
 
-  return (
-    
 
+  return (
     <>
+    <div
+        style={{
+          backgroundImage: `url(${Mypageimage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          width: '100%',
+          height: '120vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
       <Header />
       <Wrapper>
-        <Title>EditUserProfile</Title>
+        <Title></Title>
         <UserInfoWrapper>
           <UserInfoTitle>UserProfile</UserInfoTitle>
           {isEditing ? (
@@ -1104,7 +1076,9 @@ function Mypage() {
         <Divider />
         <LinkWrapper>
           <UserInfoTitle>another</UserInfoTitle>
-          <ReviewIcon href="/boardList">review board</ReviewIcon>
+          {/* 리뷰게시판 -> 로그인 회원 정보 게시판 변경 */}
+          <ReviewIcon href="/boardList">review board</ReviewIcon>  
+          <ReviewIcon href="/MyMountain">information</ReviewIcon>
           <ReviewIcon href="/chatmountain">ChatMountain</ReviewIcon>
         </LinkWrapper>
         <Divider />
@@ -1113,6 +1087,7 @@ function Mypage() {
           <Avatar src={userInfo.avatar} alt="프로필 사진" />
         </AvatarWrapper>
       </Wrapper>
+    </div>
     </>
   );
 }
