@@ -8,7 +8,8 @@ import { FaHome, FaUser, FaTasks, FaMountain } from 'react-icons/fa';
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import axios from 'axios';
 import Homeimage from './Home.jpg'; // Home 이미지
-import mountain from './mountain.png'; // Kakao Map 이미지
+import Kakaoimage from './Home.jpg'; // Home 이미지
+
 import Mountaininfoimage from './Mountaininfo.jpg'; //Mountain_info 이미지
 import Mypageimage from './Mypage.jpg'; //Mypage 이미지
 import { Card, Button, Modal, Form, Container, Pagination, handleButtonClick } from "react-bootstrap";
@@ -20,7 +21,6 @@ import member from "./member_img.png";
 import { useMediaQuery } from 'react-responsive';
 import boardback from './boardback.jpg';
 import chatpage from './chatpage.png';
-
 
 
 const Header = () => {
@@ -168,6 +168,200 @@ const Header_h = () => {
 
 
 
+function Kakao() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
+  const [markers, setMarkers] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [codeList, setCodeList] = useState([]);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const isMobiles = useMediaQuery({ maxWidth: 767 }); // 모바일 장치의 가로 너비에 따라 조정
+  const mapWidth = isMobile ? '100vh' : 'calc(100% - 0px)';
+  const mapHeight = isMobile ? '65vh' : '42em';
+
+  //햄버거 버튼 클릭 시 수행 함수
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleMarkerClick = (code) => {
+    setMarkerIndex(codeList.indexOf(code));
+  };
+
+  const handleResize = () => {
+    if (window.innerWidth <= 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+      setIsMenuOpen(false);
+    }
+  };
+  window.addEventListener('resize', handleResize);
+
+  
+
+  const [currentLocation, setCurrentLocation] = useState(null);
+  //현재 위치 가져오기
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCurrentLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (error) => console.error(error)
+    );
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const getData = () => {
+      axios
+        .get(
+          'http://ec2-3-37-214-183.ap-northeast-2.compute.amazonaws.com:8080/api/mountain'
+        )
+        .then((response) => {
+          const data = response.data; //json파일을 가져와 data 변수에 저장
+          if (!data) return;
+          const codes = data.map((mountain) => mountain.code); // code 값을 따로 배열에 저장
+          setCodeList(codes);
+
+          const newMarkers = codes.map((code) => {
+            const mountain = data.find((m) => m.code === code); // code값으로 해당 mountain 객체를 찾음
+            if (
+              !mountain ||
+              !mountain.location ||
+              !mountain.code ||
+              !mountain.name
+            )
+              return null; // mountain 객체를 찾지 못하거나 location 속성이 없는 경우 다음 코드로 넘어감
+
+            return {
+              id: mountain.id,
+              code: mountain.code,
+              name: mountain.name,
+              location: {
+                x: mountain.location.y,
+                y: mountain.location.x,
+              },
+            };
+          }).filter(Boolean);
+
+          setMarkers(newMarkers);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+    getData();
+  }, []);
+  console.log(markers);
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <Header /> {/* Add Header component here */}
+      <div
+        className="background-image"
+        style={{
+          backgroundImage: `url(${Kakaoimage})`,
+          width: '100%',
+          height: '100vh',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      ></div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100vh',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
+      >
+        <Map
+          center={
+            currentLocation
+              ? { lat: currentLocation.lat, lng: currentLocation.lng }
+              : { lat: 33.36137552429086, lng: 126.52942544970011 }
+          }
+          style={{
+            width: mapWidth,
+            height: mapHeight,
+            position: 'relative',
+          }}
+          level={3}
+        >
+          {markers.map((marker, index) => (
+            <MapMarker
+              key={index} // 각 마커를 식별하는데 사용
+              position={{ lat: marker.location.x, lng: marker.location.y }}
+              clickable={true} // 마커를 클릭할 수 있는지 여부 결정
+              onClick={() => handleMarkerClick(marker.code)} // 마커 클릭 시 실행할 함수
+              title={marker.name} // 마커에 표시될 이름
+            >
+              {/* 마커를 클릭하면 마커 정보를 보여주는 모달창 */}
+              {markerIndex === index && (
+                <div style={{ minWidth: '150px' }}>
+                  <img
+                    alt="close"
+                    width="14"
+                    height="13"
+                    src="https://t1.daumcdn.net/localimg/localimages/07/mapjsapi/2x/bt_close.gif"
+                    style={{
+                      position: 'absolute',
+                      right: '5px',
+                      top: '5px',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setMarkerIndex(-1)}
+                  />
+                  <div style={{ padding: '5px', color: '#000' }}>
+                    <span style={{ fontWeight: 'bold' }}>{marker.name}</span>{' '}
+                    <br />
+                    <a
+                      href="/Mountain_info"
+                      style={{
+                        color: 'blue',
+                        textDecoration: 'underline',
+                        marginRight: '10px',
+                      }}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      information
+                    </a>
+                  </div>
+                </div>
+              )}
+            </MapMarker>
+          ))}
+        </Map>
+      </div>
+    </div>
+  );
+}
+
+
+
 function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -189,51 +383,69 @@ function Home() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const backgroundImageStyle = {
+    backgroundImage: `url(${Homeimage})`,
+    width: '100%',
+    height: '100vh',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  };
+
+  const mainTextStyle = {
+    display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row', // 반응형에 따라 컬럼 또는 로우 방향으로 정렬
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: isMobile ? '-30px' : '0px',
+  };
+
+  const mainTextHeaderStyle = {
+    fontSize: isMobile ? '3.5rem' : '6rem', // 반응형에 따라 폰트 크기 조정
+    marginBottom: '0',
+    marginTop: isMobile ? '0px' : '40px', // 반응형에 따라 마진 조정
+    marginright: isMobile ? '300em' : '0'
+  };
+
+  const mainTextSubheaderStyle = {
+    fontSize: isMobile ? '3.5rem' : '6rem',
+    marginTop: '0',
+    marginright: isMobile ? '300em' : '0'
+  };
+
   return (
-    /*헤더 구성*/
     <div>
-    <div
-      className="background-image"
-      style={{
-        backgroundImage: `url(${Homeimage})`,
-        width: '100%',
-        height: '100vh',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    ></div>
-    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
-      {/* <div className="logo" style={{ textAlign: 'center' }}>
-        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
-       </div> */}
-      {isMobile ? (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
-          {isMenuOpen && (
+      <div className="background-image" style={backgroundImageStyle}></div>
+      <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+        {isMobile ? (
+          <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+            {isMenuOpen && (
+              <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mypage</a></li>
+              </ul>
+            )}
+          </div>
+        ) : (
+          <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
             <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mypage</a></li>
+              <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Home</a></li>
+              <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Login</a></li>
+              <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Services</a></li>
+              <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Mypage</a></li>
             </ul>
-          )}
+          </div>
+        )}
+        <div className="main-text" style={mainTextStyle}>
+          <div>
+            <h1 style={mainTextHeaderStyle}>Let's Go</h1>
+            <h1 style={mainTextSubheaderStyle}><span>Mountain</span></h1>
+          </div>
         </div>
-      ) : (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Mypage</a></li>
-          </ul>
-        </div>
-      )}
-      <div className="main-text" style={{ display: 'flex', flexDirection: 'column' }}>
-        <h1 style={{ fontSize: '5rem', marginBottom: '0' }}>Let's Go</h1>
-        <h1 style={{ fontSize: '6rem', marginTop: '0' }}><span>Mountain</span></h1>
       </div>
     </div>
-  </div>
   );
 }
 
@@ -754,23 +966,25 @@ function MyMountain() {
 
 
 const Wrapper = styled.div`
-display: grid;
-grid-template-columns: fr;
-grid-template-rows: auto;
-gap: 20px;
-margin: auto;
-margin-top: 180px;
-max-width: 1500px;
-padding: 50px;
-border: 1px solid #ccc;
-border-radius: 4px;
-background-color: #fff;
-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-
-@media (min-width: 768px) {
-  grid-template-columns: 2fr 4fr;
-  grid-template-rows: 1fr;
-}
+  display: grid;
+  align-items: center;
+  gap: 50px;
+  margin: auto;
+  margin-top: 150px;
+  max-width: 1500px;
+  padding: 50px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    height: 75.5vh;
+    margin-bottom: 100px;
+  }
 `;
 
 const Divider = styled.div`
@@ -793,23 +1007,23 @@ const UserInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: -30px;
   font-weight: bold;
 
 `;
 
 const UserInfoTitle = styled.h2`
-  font-size: 24px;
+  font-size: 28px;
   margin-bottom: 20px;
-  color: #333;
+  color: black;
   font-weight: bold;
   
 `;
 
 const UserInfo = styled.p`
   font-size: 20px;
-  margin-bottom: 5px;
-  color: #666;
+  margin-bottom: 10px;
+  color: black;
   font-weight: bold;
   margin-right: 100px;
 `;
@@ -826,11 +1040,11 @@ const LinkWrapper = styled.div`
 const ReviewIcon = styled.a`
   display: inline-block;
   padding: 10px 20px;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 4px;
   margin-bottom: 10px;
   text-decoration: none;
-  color: #333;
+  color: white;
   font-size: 20px;
   text-align: center;
   &:hover {
@@ -841,12 +1055,12 @@ const ReviewIcon = styled.a`
 `;
 
 const EditButton = styled.button`
-  background-color: #8fbc8f;
-  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  border: 2px solid #ccc;
   border-radius: 4px;
   color: white;
-  font-size: 16px;
-  margin-bottom: 20px;
+  font-size: 18px;
+  margin-bottom: 50px;
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
@@ -858,28 +1072,6 @@ const EditButton = styled.button`
 
 `;
 
-const AvatarWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 25px;
-  font-weight: bold;
-
-`;
-
-const AvatarTitle = styled.h2`
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-  font-weight: bold;
-
-`;
-
-const Avatar = styled.img`
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-`;
 
 function Mypage() {
   const [userInfo, setUserInfo] = useState({});
@@ -889,7 +1081,7 @@ function Mypage() {
     const user = {
       name: 'auspicious',
       email: 'hong@example.com',
-      phone: '010-9876-5432',
+      phone: '010-1234-5678',
       avatar: 'https://placehold.it/200x200',
     };
     setUserInfo(user);
@@ -914,6 +1106,7 @@ function Mypage() {
     }));
   };
 
+
   return (
     <>
     <div
@@ -922,8 +1115,8 @@ function Mypage() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          width: '100%',
-          height: '120vh',
+          width: 'auto',
+          height: 'auto',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -931,13 +1124,13 @@ function Mypage() {
         }}
       >
       <Header />
-      <Wrapper>
+      <Wrapper style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)', backdropFilter: 'blur(2px)' }}>
         <Title></Title>
         <UserInfoWrapper>
           <UserInfoTitle>UserProfile</UserInfoTitle>
           {isEditing ? (
             <>
-              <UserInfo>
+              <UserInfo >
                 <label htmlFor="name">name:</label>
                 <input
                   type="text"
@@ -997,7 +1190,6 @@ function Mypage() {
           <ReviewIcon href="/chatmountain">ChatMountain</ReviewIcon>
         </LinkWrapper>
         <Divider />
-
       </Wrapper>
     </div>
     </>
