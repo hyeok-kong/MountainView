@@ -19,6 +19,7 @@ import './Chatmountain.css';
 import member from "./member_img.png";
 import { useMediaQuery } from 'react-responsive';
 import boardback from './boardback.jpg';
+import chatpage from './chatpage.png';
 
 
 
@@ -86,10 +87,88 @@ const Header = () => {
 };
 
 
+const Header_b = () => {
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+      <div className="logo" style={{ textAlign: 'center' }}>
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
+      </div>
+      {isMobile ? (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+          {isMenuOpen && (
+            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+const Header_h = () => {
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
+      <div className="logo" style={{ textAlign: 'center' }}>
+        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
+      </div>
+      {isMobile ? (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+          {isMenuOpen && (
+            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'white' }}>Home</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'white' }}>Login</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'white' }}>Services</a></li>
+              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'white' }}>Mountain</a></li>
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'white' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'white' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'white' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'white' }}>Mountain</a></li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
 
 function Kakao() {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const [markerIndex, setMarkerIndex] = useState(-1); // -1은 마커가 선택되지 않은 상태
   const [markers, setMarkers] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -119,15 +198,25 @@ function Kakao() {
 
   const [showMenu, setShowMenu] = useState(false);
 
+  const handleToggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
+
+  const [id, setId] = useState("");
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState([]);
+  const [newMarkers, setNewMarkers] = useState([]);
+
   const [currentLocation, setCurrentLocation] = useState(null);
-   //현재 위치 가져오기 
+  //현재 위치 가져오기 
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition( (position) => {
-        setCurrentLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      },
+    navigator.geolocation.getCurrentPosition((position) => {
+      setCurrentLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    },
       (error) => console.error(error)
     );
   }
@@ -148,40 +237,40 @@ function Kakao() {
   useEffect(() => {
     const getData = () => {
       axios.get("http://ec2-3-37-214-183.ap-northeast-2.compute.amazonaws.com:8080/api/mountain")
-      .then(response => {
-        const data = response.data; //json파일을 가져와 data 변수에 저장
-        if (!data) return;
-        const codes = data.map((mountain) => mountain.code); // code 값을 따로 배열에 저장
-        setCodeList(codes);
-        
-        const newMarkers = codes.map((code) => {
-          const mountain = data.find((m) => m.code === code); // code값으로 해당 mountain 객체를 찾음
-          if (!mountain || !mountain.location || !mountain.code || !mountain.name) return null; // mountain 객체를 찾지 못하거나 location 속성이 없는 경우 다음 코드로 넘어감
+        .then(response => {
+          const data = response.data; //json파일을 가져와 data 변수에 저장
+          if (!data) return;
+          const codes = data.map((mountain) => mountain.code); // code 값을 따로 배열에 저장
+          setCodeList(codes);
 
-          return {
-            id: mountain.id,
-            code: mountain.code,
-            name: mountain.name,
-            location: { 
-              x: mountain.location.y, 
-              y: mountain.location.x
-            }
-          };
-        }).filter(Boolean);
-        
-        
-        setMarkers(newMarkers);
-        
-      }) 
-    .catch (error =>  {
-      console.error(error);
-    });
+          const newMarkers = codes.map((code) => {
+            const mountain = data.find((m) => m.code === code); // code값으로 해당 mountain 객체를 찾음
+            if (!mountain || !mountain.location || !mountain.code || !mountain.name) return null; // mountain 객체를 찾지 못하거나 location 속성이 없는 경우 다음 코드로 넘어감
+
+            return {
+              id: mountain.id,
+              code: mountain.code,
+              name: mountain.name,
+              location: {
+                x: mountain.location.y,
+                y: mountain.location.x
+              }
+            };
+          }).filter(Boolean);
+
+
+          setMarkers(newMarkers);
+
+        })
+        .catch(error => {
+          console.error(error);
+        });
     };
     getData();
   }, []);
   console.log(markers);
-  
-  
+
+
   return (
     /*헤더 구성*/ 
     <div style={{ position: 'relative' }}>
@@ -327,7 +416,7 @@ function LoginContainer() {
   const [isLoginSuccess, setIsLoginSuccess] = useState(false);
 
   return <Login isLoginSuccess={isLoginSuccess} setIsLoginSuccess={setIsLoginSuccess} />;
-}const Login = ({ isLoginSuccess, setIsLoginSuccess }) => {
+} const Login = ({ isLoginSuccess, setIsLoginSuccess }) => {
   const REST_API_KEY = '65d7d41f6c724b09645939d238c0b75f'; // 카카오 개발자 사이트에서 발급받은 REST API KEY
   const REDIRECT_URI = 'http://localhost:3000/login'; // 카카오 개발자 사이트에서 등록한 Redirect URI
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
@@ -359,9 +448,9 @@ function LoginContainer() {
         backgroundSize: 'cover',
       }}
     >
-      <Header/>
+      <Header_h />
 
-      
+
       <div>
         {isLoginSuccess ? (
           // 로그인 성공 시 나타날 화면
@@ -397,7 +486,7 @@ function LoginContainer() {
             >
               Kakao Login
             </a>
-            
+
           </div>
         )}
       </div>
@@ -583,91 +672,92 @@ function BoardList() {
 
   return (
     <>
-    <div
-      className="home-page"
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundImage: `url(${boardback})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-      }}
-    >
-      <Header />
-      <Container style={{ flex: '1' }}>
-        <div className="board-container" style={{ marginTop: '100px', padding: '20px' }}>
-          {board && board.map((post, index) => (
-            <Card key={index} className="mb-3" style={{ backgroundColor: '#ffffff' }}>
-              <Card.Body>
-                <Card.Title>{post && post.title}</Card.Title>
-                {post && post.content && post.content.length > 50 && !post.expanded ? (
-                  <div>
-                    <Card.Text>{post.content.substring(0, 50)}...</Card.Text>
-                    <Button onClick={() => handleExpandContent(index)}>Read more</Button>
-                  </div>
-                ) : (
-                  <div>
-                    <Card.Text>{post.content}</Card.Text>
-                  </div>
-                )}
-              </Card.Body>
-            </Card>
-          ))}
-          <div className="d-flex justify-content-center">
-            <Pagination>
-              {Array.from({ length: 10 }).map((_, index) => (
-                <Pagination.Item
-                  key={index}
-                  active={index === currentPage}
-                  onClick={() => handlePageChange(index)}
-                >
-                  {index + 1}
-                </Pagination.Item>
-              ))}
-            </Pagination>
-          </div>
-          <div className="d-flex justify-content-end mb-3" style={{ marginLeft: 'auto' }}>
-            <Button onClick={handleButtonClick} style={{ backgroundColor: '#008000', border: 'none', borderRadius: '10px', fontSize: '16px' }}>New Post</Button>
-          </div>
-          <Modal show={showModal} onHide={() => setShowModal(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title>New Post</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group>
-                  <Form.Label>Title</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter title"
-                    value={title}
-                    onChange={(event) => setTitle(event.target.value)}
-                  />
-                </Form.Group>
+      <div
+        className="home-page"
+        style={{
+          position: 'relative',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundImage: `url(${boardback})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+        }}
+      >
+        <Header_b />
+        <Container style={{ flex: '1' }}>
+          <div className="board-container" style={{ marginTop: '100px', padding: '20px' }}>
+            {board && board.map((post, index) => (
+              <Card key={index} className="mb-3" style={{ backgroundColor: '#ffffff' }}>
+                <Card.Body>
+                  <Card.Title>{post && post.title}</Card.Title>
+                  {post && post.content && post.content.length > 50 && !post.expanded ? (
+                    <div>
+                      <Card.Text>{post.content.substring(0, 50)}...</Card.Text>
+                      <Button onClick={() => handleExpandContent(index)}>Read more</Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <Card.Text>{post.content}</Card.Text>
+                    </div>
+                  )}
+                </Card.Body>
+              </Card>
+            ))}
+            <div className="d-flex justify-content-center">
+              <Pagination>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <Pagination.Item
+                    key={index}
+                    active={index === currentPage}
+                    onClick={() => handlePageChange(index)}
+                  >
+                    {index + 1}
+                  </Pagination.Item>
+                ))}
+              </Pagination>
+            </div>
+            <div className="d-flex justify-content-end mb-3" style={{ marginLeft: 'auto' }}>
+              <Button onClick={handleButtonClick} style={{ backgroundColor: '#008000', border: 'none', borderRadius: '10px', fontSize: '16px' }}>New Post</Button>
+            </div>
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>New Post</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group>
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter title"
+                      value={title}
+                      onChange={(event) => setTitle(event.target.value)}
+                    />
+                  </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Content</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={content}
-                    onChange={(event) => setContent(event.target.value)}
-                  />
-                </Form.Group>
-                <Button type="submit" style={{ backgroundColor: '#008000', border: 'none', borderRadius: '10px', fontSize: '16px' }}>
-                  Submit
-                </Button>
-              </Form>
-            </Modal.Body>
-          </Modal>
-        </div>
-      </Container>
-    </div>
+                  <Form.Group>
+                    <Form.Label>Content</Form.Label>
+                    <Form.Control
+                      as="textarea"
+
+                      rows={3}
+                      value={content}
+                      onChange={(event) => setContent(event.target.value)}
+                    />
+                  </Form.Group>
+                  <Button type="submit" style={{ backgroundColor: '#008000', border: 'none', borderRadius: '10px', fontSize: '16px' }}>
+                    Submit
+                  </Button>
+                </Form>
+              </Modal.Body>
+            </Modal>
+          </div>
+        </Container>
+      </div>
 
     </>
   );
@@ -998,7 +1088,6 @@ function Mypage() {
     }));
   };
 
-
   return (
     <>
     <div
@@ -1082,10 +1171,7 @@ function Mypage() {
           <ReviewIcon href="/chatmountain">ChatMountain</ReviewIcon>
         </LinkWrapper>
         <Divider />
-        <AvatarWrapper>
-          <AvatarTitle>profile picture</AvatarTitle>
-          <Avatar src={userInfo.avatar} alt="프로필 사진" />
-        </AvatarWrapper>
+
       </Wrapper>
     </div>
     </>
@@ -1104,7 +1190,7 @@ const Chatmountain = () => {
   const handleInputChange = (event) => {
     setQuestion(event.target.value);
   };
-
+/*
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -1124,7 +1210,27 @@ const Chatmountain = () => {
       console.error(error);
     }
   };
+*/
+const handleSubmit = (event) => {
+  event.preventDefault();
 
+  // Sample questions and answers
+  const sampleQuestions = [
+    'What is the weather like today?',
+    'How tall is Mount Everest?',
+    'What is the capital of France?',
+  ];
+  const sampleAnswers = [
+    'The weather today is sunny with a temperature of 25 degrees Celsius.',
+    'The weather today is sunny with a temperature of 23 degrees Celsius.',
+    'The weather today is sunny with a temperature of 19 degrees Celsius.',
+    'The weather today is sunny with a temperature of 13 degrees Celsius.',
+
+  ];
+
+  const randomIndex = Math.floor(Math.random() * sampleQuestions.length);
+  setAnswer(sampleAnswers[randomIndex]);
+};
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -1154,59 +1260,74 @@ const Chatmountain = () => {
   };
 
 
-
-
   return (
-    /*헤더 구성*/
-    <div className="home-page" style={{ backgroundColor: '#f2f2f2' }}>
-      <div className="logo" style={{ textAlign: 'center' }}>
-        <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
-      </div>
-      {isMobile ? (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
-          {isMenuOpen && (
+    <div
+      className="home-page"
+      style={{
+        position: 'relative',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundImage: `url(${chatpage})`, // Replace 'mountainBackground' with the URL of the mountain image
+        backgroundSize: 'cover',
+      }}
+    >
+      <div className="home-page" style={{ backgroundColor: 'transparent', padding: '20px' }}>
+        <div className="logo" style={{ textAlign: 'center' }}>
+          <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
+        </div>
+        {isMobile ? (
+          <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+            {isMenuOpen && (
+              <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+                <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+              </ul>
+            )}
+          </div>
+        ) : (
+          <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
             <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
+              <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
+              <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
+              <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
+              <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
             </ul>
-          )}
-        </div>
-      ) : (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
-          </ul>
-        </div>
-      )}
+          </div>
+        )}
 
-
-      <div className="chat-container" style={{ textAlign: 'center', marginTop: '120px' }}>
-        <div className="chat-header">
-          <h1>ChatMountain</h1>
-        </div>
-        <div className="intro-container">
-          <form onSubmit={handleSubmit}>
-            <input type="text" value={question} onChange={handleInputChange} placeholder="질문을 입력하세요" />
-            <button type="submit">질문하기</button>
-          </form>
-          {answer && (
-            <div className="answer-container">
-              <h2>답변</h2>
-              <p>{answer}</p>
-            </div>
-          )}
+        <div className="chat-container" style={{ marginTop: '20px', backgroundColor: 'transparent', padding: '20px', borderRadius: '5px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', maxWidth: '500px', margin: '0 auto' }}>
+          <div className="chat-header" style={{color:'white',fontSize:'20px', padding: '10px', borderRadius: '5px', outline: 'none', width: '100%' }}>
+            <p>ChatMountain</p>
+          </div>
+          <div className="intro-container">
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                value={question}
+                onChange={handleInputChange}
+                placeholder="Enter your question"
+                style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc', outline: 'none', width: '100%' }}
+              />
+              <button type="submit" style={{ padding: '10px 20px', borderRadius: '5px', border: 'none', backgroundColor: 'transparent', color: '#fff', cursor: 'pointer' }}>Ask a Question</button>
+            </form>
+            {answer && (
+              <div className="answer-container" style={{color:'white',fontSize:'20px', padding: '10px', borderRadius: '5px',  outline: 'none', width: '100%' }}>
+                <p>{answer}</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
-
   );
 };
+
 
 
 
