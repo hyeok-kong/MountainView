@@ -39,8 +39,8 @@
 /* Navigation Menu */
 .home-page .menu {
   position: absolute;
-  top: 65px;
-  right: 20px;
+  top: 30px;
+  right: 30px;
   z-index: 1;
   display: flex;
 }
@@ -309,7 +309,7 @@ td {
   margin: auto;
   box-sizing: border-box;
   padding: 4vh 0;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.2);
 }
 .inner {
   width: 90%;

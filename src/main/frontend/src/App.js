@@ -8,8 +8,8 @@ import { FaHome, FaUser, FaTasks, FaMountain } from 'react-icons/fa';
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import axios from 'axios';
 import Homeimage from './Home.jpg'; // Home 이미지
-import Kakaoimage from './Home.jpg'; // Home 이미지
-
+import Kakaoimage from './Kakaomapimage.jpg'; // Home 이미지
+import Kakaoimage1 from './Kakaomapimage1.jpg';
 import Mountaininfoimage from './Mountaininfo.jpg'; //Mountain_info 이미지
 import Mypageimage from './Mypage.jpg'; //Mypage 이미지
 import { Card, Button, Modal, Form, Container, Pagination, handleButtonClick } from "react-bootstrap";
@@ -75,10 +75,10 @@ const Header = () => {
       ) : (
         <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
           <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black' }}>Mypage</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Home</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Login</a></li>
+            <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Services</a></li>
+            <li style={{ display: 'inline-block' }}><a href="/Mypage" style={{ textDecoration: 'none', color: 'black', fontSize: '24px' }}>Mypage</a></li>
           </ul>
         </div>
       )}
@@ -90,7 +90,7 @@ const Header = () => {
 const Header_b = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -101,19 +101,42 @@ const Header_b = () => {
         <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
       </div>
       {isMobile ? (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+        <>
+          <nav className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer'}} onClick={handleMenuClick}></i>
+          </nav>
           {isMenuOpen && (
-            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'black' }}>Services</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'black' }}>Mountain</a></li>
-            </ul>
+            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', right: '0', height: '100vh', width: '250px', zIndex: '999', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)', transition: 'all 0.3s ease-in-out' }}>
+              <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', border: '0px' }} onClick={handleMenuClick}>
+                {isOpen ? <i className="fas fa-bars"></i> : <i className="fas fa-times"></i>}
+              </button>
+              <ul style={{ listStyle: 'none', padding: '0' }}>
+                <li style={{ display: 'block', marginTop: '40px' }}>
+                  <a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaHome style={{ marginRight: '5px' }} /> Home
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaUser style={{ marginRight: '5px' }} /> Login
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaTasks style={{ marginRight: '5px' }} /> Services
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/Mypage" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaMountain style={{ marginRight: '5px' }} /> Mypage
+                  </a>
+                </li>
+              </ul>
+            </div>
           )}
-        </div>
+        </>
       ) : (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+        <div className="menu" style={{ textAlign: 'center', marginTop: '50px' }}>
           <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'black' }}>Home</a></li>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'black' }}>Login</a></li>
@@ -128,7 +151,7 @@ const Header_b = () => {
 const Header_h = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -139,19 +162,42 @@ const Header_h = () => {
         <img className="logo-img" src={icon} alt="Logo Image" style={{ width: isMobile ? '100px' : '150px' }} />
       </div>
       {isMobile ? (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
-          <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer' }} onClick={handleMenuClick}></i>
+        <>
+          <nav className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+            <i className="fa fa-bars" style={{ fontSize: '20px', cursor: 'pointer'}} onClick={handleMenuClick}></i>
+          </nav>
           {isMenuOpen && (
-            <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'white' }}>Home</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'white' }}>Login</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/main" style={{ textDecoration: 'none', color: 'white' }}>Services</a></li>
-              <li style={{ display: 'block', marginTop: '20px' }}><a href="/MyMountain" style={{ textDecoration: 'none', color: 'white' }}>Mountain</a></li>
-            </ul>
+            <div className="sidebar" style={{ backgroundColor: 'white', position: 'fixed', top: '0', right: '0', height: '100vh', width: '250px', zIndex: '999', boxShadow: '0px 0px 10px rgba(0,0,0,0.2)', transition: 'all 0.3s ease-in-out' }}>
+              <button style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '20px', cursor: 'pointer', border: '0px' }} onClick={handleMenuClick}>
+                {isOpen ? <i className="fas fa-bars"></i> : <i className="fas fa-times"></i>}
+              </button>
+              <ul style={{ listStyle: 'none', padding: '0' }}>
+                <li style={{ display: 'block', marginTop: '40px' }}>
+                  <a href="/" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaHome style={{ marginRight: '5px' }} /> Home
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/login" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaUser style={{ marginRight: '5px' }} /> Login
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/main" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaTasks style={{ marginRight: '5px' }} /> Services
+                  </a>
+                </li>
+                <li style={{ display: 'block', marginTop: '20px' }}>
+                  <a href="/Mypage" style={{ textDecoration: 'none', color: 'black', display: 'block', padding: '10px' }}>
+                    <FaMountain style={{ marginRight: '5px' }} /> Mypage
+                  </a>
+                </li>
+              </ul>
+            </div>
           )}
-        </div>
+        </>
       ) : (
-        <div className="menu" style={{ textAlign: 'center', marginTop: '20px' }}>
+        <div className="menu" style={{ textAlign: 'center', marginTop: '50px' }}>
           <ul style={{ listStyle: 'none', display: 'inline-block', padding: '0' }}>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/" style={{ textDecoration: 'none', color: 'white' }}>Home</a></li>
             <li style={{ display: 'inline-block', marginRight: '20px' }}><a href="/login" style={{ textDecoration: 'none', color: 'white' }}>Login</a></li>
@@ -274,11 +320,12 @@ function Kakao() {
 
   return (
     <div style={{ position: 'relative' }}>
-      <Header /> {/* Add Header component here */}
+      <Header_b /> {/* Add Header component here */}
       <div
         className="background-image"
         style={{
-          backgroundImage: `url(${Kakaoimage})`,
+          // backgroundImage: `url(${Kakaoimage})`,
+          backgroundcolor: 'white',
           width: '100%',
           height: '100vh',
           backgroundSize: 'cover',
@@ -574,8 +621,8 @@ function Mountain_info() {
     color: isFavorite ? "black" : "gray",
     borderRadius: "5px",
     border: "2px solid black",
-    padding: "10px",
-    margin: "10px",
+    padding: "8px",
+    margin: "5px",
     cursor: "pointer",
     transition: "all 0.2s ease-in-out",
     fontWeight: "bold",
@@ -587,7 +634,7 @@ function Mountain_info() {
     color: "white",
     backgroundColor: "black",
     borderRadius: "5px",
-    padding: "10px",
+    padding: "8px",
     fontWeight: "bold",
     transition: "all 0.2s ease-in-out",
     outline: "none",
@@ -599,25 +646,43 @@ function Mountain_info() {
   const trailItemStyle = {
     marginBottom: "20px",
     padding: "20px",
-    
     borderRadius: "10px",
     boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
   };
 
   const contentStyle = {
-    maxWidth: "800px",
+    maxWidth: "1000px",
     margin: "0 auto",
     padding: "50px",
     backgroundColor: "#f2f22",
     borderRadius: "20px",
-    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.3)",
-    backgroundImage: `url(${Mountaininfoimage})`, /*배경 이미지 삽입*/
-    backgroundSize: 'cover',
-    backgroundPosition: 'center', 
-    color:'white' /*글씨 색 변경*/
+    boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
+    color: 'white',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   };
 
+  const homeStyle = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "auto",
+    backgroundImage: `url(${Mountaininfoimage})`, /*배경 이미지 삽입*/
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  };
+
+  const TextStyle = {
+    color: "white", // Set text color to white
+  };
+
+  const TitleStyle = {
+    color: "white", // Set text color to white
+    fontWeight: "bold"
+  };
+  
   return (
+    <div style={homeStyle}>
     <div style={contentStyle}>
       <h1>{mountainData.name}</h1>
       <p>{mountainData.features}</p>
@@ -630,16 +695,17 @@ function Mountain_info() {
           <p>난이도: {trail.difficulty}</p>
         </div>
       ))}
-      <h1>설명</h1>
-      <p>{mountainData.description}</p>
-      <h1>교통</h1>
-      <p>{mountainData.transportation}</p>
+      <h1 style={TitleStyle}>설명</h1>
+      <p style={TextStyle}>{mountainData.description}</p>
+      <h1 style={TitleStyle}>교통</h1>
+      <p style={TextStyle}>{mountainData.transportation}</p>
       <button style={favoriteButtonStyle} onClick={handleFavorite}>
         {isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}
       </button>
       <Link to="/main" style={linkStyle}>
-        다른 산 보러 가기
+        다른 산 보기
       </Link>
+    </div>
     </div>
   );
 }
@@ -971,7 +1037,7 @@ const Wrapper = styled.div`
   gap: 50px;
   margin: auto;
   margin-top: 150px;
-  max-width: 1500px;
+  max-width: 1450px;
   padding: 50px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -1124,7 +1190,7 @@ function Mypage() {
         }}
       >
       <Header />
-      <Wrapper style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)', backdropFilter: 'blur(2px)' }}>
+      <Wrapper style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(2px)' }}>
         <Title></Title>
         <UserInfoWrapper>
           <UserInfoTitle>UserProfile</UserInfoTitle>
